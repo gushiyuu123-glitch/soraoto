@@ -1,0 +1,516 @@
+.section{
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+  padding: clamp(128px, 15vh, 220px) 0 clamp(118px, 14vh, 198px);
+  isolation: isolate;
+}
+
+.inner{
+  width: min(1520px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4.5vw, 82px);
+
+  display: grid;
+  grid-template-columns: 1px minmax(280px, 460px) minmax(0, 1fr);
+  gap: clamp(42px, 5vw, 96px);
+  align-items: start;
+}
+
+.rail{
+  width: 1px;
+  height: clamp(680px, 72vh, 980px);
+  margin-top: 10px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(var(--ink), 0.08) 12%,
+    rgba(var(--ink), 0.18) 44%,
+    rgba(var(--ink), 0.10) 76%,
+    transparent 100%
+  );
+}
+
+/* 左：タイトル */
+.main{
+  position: sticky;
+  top: 120px;
+  align-self: start;
+}
+
+.kicker{
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.40);
+}
+
+.title{
+  margin: 0 0 clamp(18px, 2.4vh, 28px);
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.004em;
+  line-height: 1.08;
+}
+
+.t1{
+  display: block;
+  font-size: clamp(30px, 3.2vw, 52px);
+  line-height: 1.18;
+  color: rgba(var(--ink), 0.74);
+  text-wrap: balance;
+}
+
+.t2{
+  display: block;
+  margin-top: 12px;
+  font-size: clamp(15px, 1.6vw, 22px);
+  line-height: 1.5;
+  color: rgba(var(--ink), 0.54);
+}
+
+.lead{
+  margin: 0;
+  max-width: 28em;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 2.04;
+  letter-spacing: 0.018em;
+  color: rgba(var(--ink), 0.66);
+}
+
+/* 右：台紙 */
+.sheet{
+  position: relative;
+  isolation: isolate;
+  padding-top: 6px;
+}
+
+.sheet::before{
+  content: "";
+  position: absolute;
+  inset: -18px -18px -18px -18px;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 68% 70% at 18% 14%,
+      rgba(255,255,255,0.64) 0%,
+      rgba(255,255,255,0.28) 30%,
+      rgba(255,255,255,0.10) 48%,
+      transparent 68%
+    );
+  filter: blur(0.18px);
+  opacity: 0.95;
+}
+
+.score{
+  position: absolute;
+  left: clamp(2px, 0.8vw, 14px);
+  top: 0;
+  width: clamp(240px, 24vw, 390px);
+  height: auto;
+  z-index: -1;
+  pointer-events: none;
+  stroke: rgba(var(--ink), 0.10);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.20;
+  transform: rotate(-2deg);
+  filter: blur(0.12px);
+}
+
+.list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(48px, 5.4vh, 82px);
+}
+
+/* ─────────────────────────
+   破綻しない構造：plan = 画像(左) + 情報(右)
+   これで重なりが物理的に起きない
+───────────────────────── */
+.plan{
+  --beat: 3;
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(170px, 14.5vw, 232px) minmax(0, 1fr);
+  gap: clamp(18px, 2vw, 30px);
+  align-items: start;
+  padding-bottom: clamp(24px, 2.6vh, 34px);
+}
+
+.plan::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(var(--ink), 0.04),
+    rgba(var(--ink), 0.11) 18%,
+    rgba(var(--ink), 0.07) 72%,
+    transparent 100%
+  );
+}
+
+/* リズム：少しだけ */
+.plan1{ margin-left: clamp(0px, 0.5vw, 10px); }
+.plan2{ margin-left: clamp(18px, 1.6vw, 34px); }
+.plan3{ margin-left: clamp(8px, 0.9vw, 18px); }
+
+/* 画像（思い出の全方位膜） */
+.media{
+  position: relative;
+  margin: 0;
+  width: 100%;
+  isolation: isolate;
+  transform: translateY(-2px);
+}
+
+.plan2 .media{ transform: translateY(10px); }
+.plan3 .media{ transform: translateY(4px); }
+
+.mediaImg{
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: saturate(0.98) contrast(1.02);
+
+  /* 四辺フェザー（透明PNGでも“思い出化”を確実にする） */
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 92% at 50% 50%,
+    black 54%,
+    rgba(0,0,0,0.86) 72%,
+    rgba(0,0,0,0.48) 86%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 92% 92% at 50% 50%,
+    black 54%,
+    rgba(0,0,0,0.86) 72%,
+    rgba(0,0,0,0.48) 86%,
+    transparent 100%
+  );
+}
+
+/* 全方位グラデ膜（上/下/左/右/角） */
+.memory{
+  position: absolute;
+  inset: -6%;
+  z-index: 2;
+  pointer-events: none;
+
+  background:
+    radial-gradient(110% 95% at 50% 50%, transparent 50%, rgba(247,251,255,0.10) 66%, rgba(247,251,255,0.34) 82%, rgba(247,251,255,0.70) 100%),
+    radial-gradient(55% 40% at 50% 0%, rgba(255,255,255,0.46), transparent 72%),
+    radial-gradient(55% 40% at 50% 100%, rgba(255,255,255,0.38), transparent 72%),
+    radial-gradient(40% 55% at 0% 50%, rgba(255,255,255,0.36), transparent 72%),
+    radial-gradient(40% 55% at 100% 50%, rgba(255,255,255,0.36), transparent 72%),
+    radial-gradient(34% 34% at 0% 0%, rgba(255,255,255,0.46), transparent 70%),
+    radial-gradient(34% 34% at 100% 0%, rgba(255,255,255,0.40), transparent 70%),
+    radial-gradient(34% 34% at 0% 100%, rgba(255,255,255,0.40), transparent 70%),
+    radial-gradient(34% 34% at 100% 100%, rgba(255,255,255,0.46), transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0.98;
+  filter: blur(0.14px);
+}
+
+/* 情報側 */
+.info{
+  min-width: 0;
+  padding-top: 6px;
+}
+
+/* 金額は情報側の右上（＝画像と競合しない） */
+.top{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.head{
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.no{
+  flex: 0 0 auto;
+  margin-top: 2px;
+  font-family: var(--font-ital);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: rgba(var(--ink), 0.34);
+}
+
+.headText{
+  min-width: 0;
+}
+
+.eyebrow{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(var(--ink), 0.76);
+}
+
+.meta{
+  margin: 4px 0 0;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.42);
+}
+
+.price{
+  min-width: 96px;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.beat{
+  width: calc(var(--beat) * 18px);
+  height: 1px;
+  background: rgba(var(--ink), 0.15);
+  position: relative;
+  opacity: 0.62;
+}
+
+.beat::after{
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(var(--ink), 0.14);
+}
+
+.amount{
+  margin: 0;
+  font-family: var(--font-ital);
+  font-size: clamp(19px, 2.05vw, 29px);
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.66);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.planLead{
+  margin: 0 0 8px;
+  max-width: 19em;
+  font-family: var(--font-poem);
+  font-size: clamp(18px, 1.7vw, 28px);
+  font-weight: 500;
+  line-height: 1.52;
+  letter-spacing: 0.004em;
+  color: rgba(var(--ink), 0.62);
+}
+
+.desc{
+  margin: 0;
+  max-width: 34em;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.92;
+  letter-spacing: 0.018em;
+  color: rgba(var(--ink), 0.60);
+}
+
+/* 補足 */
+.notes{
+  margin-top: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.note{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  line-height: 1.92;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.54);
+}
+
+/* タブレット：金額を下へ落としても壊れない */
+@media (max-width: 1180px){
+  .inner{
+    grid-template-columns: 1px minmax(240px, 360px) minmax(0, 1fr);
+    gap: 28px 34px;
+  }
+
+  .plan1, .plan2, .plan3{ margin-left: 0; }
+
+  .top{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .price{
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .planLead, .desc{
+    max-width: none;
+  }
+}
+
+/* SP */
+@media (max-width: 767px){
+  .inner{
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .rail{ display: none; }
+  .main{ position: static; }
+
+  .list{ gap: 34px; }
+
+  .plan{
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-bottom: 26px;
+  }
+
+  .plan1, .plan2, .plan3{ margin-left: 0; }
+  .plan2 .media, .plan3 .media{ transform: none; }
+
+  .media{ width: clamp(170px, 54vw, 240px); }
+
+  .top{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .price{ justify-items: start; }
+
+  .planLead{
+    max-width: none;
+    font-size: clamp(18px, 5.5vw, 24px);
+  }
+  .desc{
+    max-width: none;
+    font-size: 12.5px;
+  }
+}
+.media{
+  position: relative;
+  margin: 0;
+  width: 100%;
+  isolation: isolate;
+  transform: translateY(-2px);
+}
+
+.media::after{
+  content: "";
+  position: absolute;
+  inset: -2%;
+  z-index: 1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse 88% 82% at 52% 46%,
+      rgba(22, 30, 40, 0) 42%,
+      rgba(22, 30, 40, 0.05) 68%,
+      rgba(22, 30, 40, 0.10) 86%,
+      rgba(22, 30, 40, 0.16) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(16, 24, 34, 0.05) 0%,
+      rgba(16, 24, 34, 0.02) 28%,
+      rgba(16, 24, 34, 0.07) 100%
+    );
+
+  mix-blend-mode: multiply;
+  opacity: 0.72;
+  filter: blur(0.12px);
+}
+.memory{
+  position: absolute;
+  inset: -6%;
+  z-index: 2;
+  pointer-events: none;
+
+  background:
+    radial-gradient(110% 95% at 50% 50%, transparent 50%, rgba(247,251,255,0.08) 66%, rgba(247,251,255,0.26) 82%, rgba(247,251,255,0.56) 100%),
+    radial-gradient(55% 40% at 50% 0%, rgba(255,255,255,0.34), transparent 72%),
+    radial-gradient(55% 40% at 50% 100%, rgba(255,255,255,0.28), transparent 72%),
+    radial-gradient(40% 55% at 0% 50%, rgba(255,255,255,0.26), transparent 72%),
+    radial-gradient(40% 55% at 100% 50%, rgba(255,255,255,0.26), transparent 72%),
+    radial-gradient(34% 34% at 0% 0%, rgba(255,255,255,0.34), transparent 70%),
+    radial-gradient(34% 34% at 100% 0%, rgba(255,255,255,0.30), transparent 70%),
+    radial-gradient(34% 34% at 0% 100%, rgba(255,255,255,0.30), transparent 70%),
+    radial-gradient(34% 34% at 100% 100%, rgba(255,255,255,0.34), transparent 70%);
+  mix-blend-mode: screen;
+  opacity: 0.84;
+  filter: blur(0.14px);
+}
+.mediaImg{
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: saturate(0.96) contrast(1.03) brightness(0.965);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 92% at 50% 50%,
+    black 54%,
+    rgba(0,0,0,0.86) 72%,
+    rgba(0,0,0,0.48) 86%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 92% 92% at 50% 50%,
+    black 54%,
+    rgba(0,0,0,0.86) 72%,
+    rgba(0,0,0,0.48) 86%,
+    transparent 100%
+  );
+}
+.main{
+  position: relative;
+  isolation: isolate;
+}
+
+.grassAccent{
+  position: absolute;
+  left: clamp(-64px, -4.2vw, -18px);   /* ← -86px/-5.2vw/-28px から少し右へ */
+  bottom: clamp(-520px, -40vh, -340px);
+
+  width: clamp(150px, 17vw, 280px);
+  height: auto;
+
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+
+  opacity: 0.30;
+  transform: rotate(-24deg);
+  filter: blur(0.12px);
+
+  mix-blend-mode: multiply;
+}
+/* 少しだけ空気に沈める */
+.grassAccent::selection{
+  background: transparent;
+}

@@ -1,0 +1,357 @@
+/* src/sections/Teacher.module.css
+   SORAOTO — Teacher
+   原則：境界は割らない / 紙を固定 / 雲は下端だけ / 呼吸は内側
+*/
+
+.section{
+  position: relative;
+  isolation: isolate;
+
+  background: rgb(var(--paper));
+
+  /* 穴禁止 */
+  margin-top: 0;
+
+  /* 呼吸（上多め/下は次へ渡す） */
+  padding: clamp(112px, 12.8vh, 188px) 0 clamp(96px, 11.2vh, 168px);
+}
+
+/* 上端の溶かしは使わない（帯の再発源） */
+.section::before{ content: none; }
+
+/* 下端だけ“雲で溶かす” */
+.section::after{
+  content:"";
+  position:absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -1px;
+  height: clamp(140px, 16vh, 260px);
+  pointer-events:none;
+  z-index: 0;
+
+  background:
+    radial-gradient(62% 78% at 18% 72%, rgba(255,255,255,.20) 0%, transparent 70%),
+    radial-gradient(56% 66% at 52% 58%, rgba(255,255,255,.16) 0%, transparent 74%),
+    radial-gradient(62% 76% at 86% 70%, rgba(255,255,255,.14) 0%, transparent 74%),
+    radial-gradient(120% 120% at 50% 100%, rgba(var(--paper), .55) 0%, transparent 62%);
+
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 42%, transparent 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 42%, transparent 100%);
+
+  opacity: .76;
+  filter: blur(0.18px);
+}
+
+/* layout（反転：rail / main / visual） */
+.inner{
+  position: relative;
+  z-index: 1;
+
+  width: min(1320px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4vw, 60px);
+
+  display: grid;
+  grid-template-columns: 2px minmax(0, 1fr) minmax(320px, 520px);
+  grid-template-areas: "rail main visual";
+  grid-template-rows: auto;
+  grid-auto-rows: min-content;
+
+  column-gap: clamp(44px, 5.2vw, 96px);
+  row-gap: clamp(22px, 3vw, 44px);
+
+  align-items: start;
+  justify-items: stretch;
+}
+
+/* ★暗黙行に押し出されない契約 */
+.rail,
+.main,
+.visualWrap{
+  grid-row: 1;
+  align-self: start;
+}
+
+/* rail */
+.rail{
+  grid-area: rail;
+  width: 1px;
+  height: clamp(560px, 62vh, 860px);
+  margin-top: 8px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(12,26,36,0.12) 16%,
+    rgba(12,26,36,0.24) 52%,
+    rgba(12,26,36,0.08) 84%,
+    transparent 100%
+  );
+}
+
+/* main */
+.main{
+  grid-area: main;
+  position: relative;
+  isolation: isolate;
+  max-width: 760px;
+  min-width: 0;
+}
+
+/* 箱禁止：可読は“膜”で取る */
+.main::before{
+  content:"";
+  position: absolute;
+  inset: -26px -34px -20px -28px;
+  pointer-events: none;
+  z-index: -2;
+
+  background: radial-gradient(
+    ellipse 62% 76% at 18% 38%,
+    rgba(255,255,255,0.20) 0%,
+    rgba(255,255,255,0.10) 34%,
+    transparent 72%
+  );
+  filter: blur(0.25px);
+  opacity: 0.95;
+}
+
+/* 雲：本文の下敷き */
+.cloudUnder{
+  position: absolute;
+  left: clamp(10px, 1.6vw, 34px);
+   bottom: clamp(-480px, -34vh, -320px);
+  width: clamp(280px, 28vw, 600px);
+  height: auto;
+
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  filter: blur(0.18px);
+
+  pointer-events: none;
+  z-index: -1;       /* main::before(-2)より前、本文より後ろ */
+  transform: rotate(-1.1deg);
+}
+.cloudUnder{
+  left: clamp(-52px, -4.0vw, -22px);
+  bottom: clamp(-480px, -34vh, -320px);
+  transform: translateX(-16px) rotate(-1.1deg);
+}
+/* text rhythm */
+.kicker{
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(12,26,36,0.44);
+}
+
+.title{
+  margin: 0 0 clamp(22px, 2.8vh, 34px);
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  line-height: 1.12;
+  color: rgba(12,26,36,0.84);
+}
+
+.t1{
+  display: block;
+  font-size: clamp(26px, 3.0vw, 42px);
+  color: rgba(12,26,36,0.82);
+  line-break: strict;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.t2{
+  display: block;
+  margin-top: 10px;
+  font-size: clamp(17px, 2.0vw, 26px);
+  color: rgba(12,26,36,0.60);
+  line-height: 1.38;
+}
+
+.lead{
+  margin: 0 0 20px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 2.02;
+  letter-spacing: 0.02em;
+  color: rgba(12,26,36,0.72);
+}
+
+.lead2{
+  margin: 0 0 22px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 2.02;
+  letter-spacing: 0.02em;
+  color: rgba(12,26,36,0.66);
+}
+
+/* 1行ラベル */
+.flowLine{
+  margin: 0 0 18px;
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: rgba(12,26,36,0.46);
+  text-transform: uppercase;
+
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+.flowWord{ color: rgba(12,26,36,0.52); }
+.flowSep{ opacity: 0.42; }
+
+.note{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 2.0;
+  color: rgba(12,26,36,0.58);
+}
+
+.noteEm{
+  font-family: var(--font-ital);
+  font-style: italic;
+  letter-spacing: 0.10em;
+  color: rgba(12,26,36,0.78);
+}
+
+/* visual */
+.visualWrap{
+  grid-area: visual;
+  position: relative;
+  padding-top: clamp(8px, 1.2vh, 14px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.visual{
+  margin: 0;
+  position: relative;
+  width: 100%;
+}
+
+.visualImg{
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateZ(0);
+}
+
+.visualVeil{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse 78% 64% at 40% 30%,
+      rgba(255,255,255,0.16) 0%,
+      rgba(255,255,255,0.06) 40%,
+      transparent 74%
+    );
+  filter: blur(0.25px);
+  opacity: 0.95;
+}
+
+.visualMeta{ position: relative; }
+
+.metaKicker{
+  margin: 0 0 8px;
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(12,26,36,0.52);
+}
+
+.metaLine{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: rgba(12,26,36,0.56);
+}
+
+/* SP */
+@media (max-width: 767px){
+  .section{
+    margin-top: 0;
+    padding: clamp(92px, 11.5vh, 150px) 0 clamp(78px, 9.8vh, 126px);
+  }
+
+  .inner{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "visual";
+    row-gap: 22px;
+    column-gap: 0;
+  }
+
+  .rail{ display: none; }
+  .visualWrap{ padding-top: 6px; }
+
+  .t1{ font-size: clamp(24px, 7.2vw, 34px); }
+  .t2{ font-size: clamp(16px, 5.1vw, 22px); }
+
+  .lead,
+  .lead2{ font-size: 13px; }
+
+  .cloudUnder{ display:none; }
+}
+/* 追加：プロフィール台帳 */
+.profile{
+  margin: 0 0 22px;
+  display: grid;
+  gap: 10px;
+  max-width: 620px;
+  position: relative;
+}
+
+.profileRow{
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(12,26,36,0.10);
+}
+
+.profileKey{
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgba(12,26,36,0.44);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.profileVal{
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.95;
+  letter-spacing: 0.02em;
+  color: rgba(12,26,36,0.70);
+  min-width: 0;
+}
+
+/* SP：キー幅を縮める */
+@media (max-width: 767px){
+  .profileRow{
+    grid-template-columns: 80px minmax(0, 1fr);
+  }
+}

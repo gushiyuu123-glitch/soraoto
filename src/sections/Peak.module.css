@@ -1,0 +1,232 @@
+/* src/sections/Peak.module.css
+   SORAOTO — Peak (Moment)
+   基軸：1枚絵 + 膜コピー + 編集署名（譜面SVGは1セットだけ）
+*/
+
+.section{
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+  padding: clamp(92px, 11vh, 160px) 0 clamp(92px, 11vh, 160px);
+  isolation: isolate;
+}
+
+.inner{
+  width: min(1680px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(18px, 3.6vw, 64px);
+  position: relative;
+}
+
+/* 1枚絵 */
+.visual{
+  margin: 0;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  overflow: visible;
+}
+
+/* 笑顔写真は右が主役なので右寄せ */
+.visualImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 72% 48%;
+  transform: scale(1.01);
+  filter: saturate(0.98) contrast(1.03);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 84% at 50% 48%,
+    black 0%,
+    rgba(0,0,0,0.92) 52%,
+    rgba(0,0,0,0.46) 78%,
+    transparent 94%
+  );
+  mask-image: radial-gradient(
+    ellipse 92% 84% at 50% 48%,
+    black 0%,
+    rgba(0,0,0,0.92) 52%,
+    rgba(0,0,0,0.46) 78%,
+    transparent 94%
+  );
+}
+
+.visualVeil{
+  position: absolute;
+  inset: -8% -8% -8% -8%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(900px 520px at 18% 66%, rgba(255,255,255,.20), transparent 64%),
+    radial-gradient(1100px 640px at 56% 24%, rgba(255,255,255,.12), transparent 62%);
+  filter: blur(0.25px);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 96% 88% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.55) 72%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 96% 88% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.55) 72%,
+    transparent 92%
+  );
+
+  opacity: 0.9;
+}
+
+/* overlay：横だけ中央基準 → copyを少し左へ */
+.overlay{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: center;   /* 下固定→中央へ */
+  justify-items: center; /* ✅ 中央基準 */
+  padding: clamp(28px, 3.2vw, 54px);
+}
+
+.copy{
+  width: min(640px, 92%);
+  position: relative;
+  isolation: isolate;
+
+  justify-self: center;
+
+ margin-left: clamp(-260px, -15vw, -140px);
+  margin-top: clamp(-44px, -4.5vh, -18px);
+
+  /* いったん外す（縦はmargin-topで管理） */
+  margin-bottom: 0;
+}
+.copy::before{
+  content:"";
+  position:absolute;
+  inset: -22px -26px -18px -22px;
+  z-index: -2;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      ellipse 74% 88% at 12% 58%,
+      rgba(255,255,255,0.84) 0%,
+      rgba(255,255,255,0.56) 24%,
+      rgba(255,255,255,0.22) 46%,
+      rgba(255,255,255,0.08) 62%,
+      transparent 78%
+    );
+  filter: blur(0.22px);
+  opacity: 0.92;
+}
+
+/* ── 編集署名：譜面SVG（1セットだけ） ── */
+.score{
+  position: absolute;
+  left: clamp(10px, 1.2vw, 18px);
+  top: clamp(18px, 2.2vw, 34px);
+  width: clamp(210px, 22vw, 360px);
+  height: auto;
+
+  pointer-events: none;
+  z-index: -1;
+
+  stroke: rgba(var(--ink), 0.16);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.28;
+
+  transform: rotate(-2.2deg);
+  filter: blur(0.12px); /* 強いblur禁止。気配だけ */
+}
+
+/* noteheads（ほんの少しだけ濃く） */
+.noteFill{
+  fill: rgba(var(--ink), 0.18);
+  stroke: none;
+  opacity: 0.9;
+}
+
+/* tieはさらに薄く */
+.tie{
+  stroke: rgba(var(--ink), 0.12);
+  stroke-width: 1;
+  opacity: 0.65;
+}
+
+.kicker{
+  margin: 0 0 12px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.46);
+}
+
+.title{
+  margin: 0 0 18px;
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  line-height: 1.10;
+  color: rgba(var(--ink), 0.86);
+}
+
+.t1{
+  display:block;
+  font-size: clamp(28px, 3.2vw, 52px);
+  color: rgba(var(--ink), 0.84);
+  line-break: strict;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.t2{
+  display:block;
+  margin-top: 10px;
+  font-size: clamp(16px, 1.9vw, 26px);
+  color: rgba(var(--ink), 0.62);
+  line-height: 1.38;
+}
+
+/* CTAなしなので、leadで静かに締める */
+.lead{
+  margin: 0 0 8px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 2.02;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.72);
+}
+
+/* SP */
+@media (max-width: 767px){
+  .section{
+    padding: clamp(76px, 10vh, 132px) 0 clamp(76px, 10vh, 132px);
+  }
+
+  .visual{
+    aspect-ratio: 16 / 10;
+  }
+
+  .overlay{
+    padding: 18px;
+    justify-items: stretch; /* ✅ 端末では安全に戻す */
+  }
+
+  .copy{
+    width: 100%;
+    transform: none; /* ✅ SPはオフセットしない */
+  }
+
+  .t1{ font-size: clamp(26px, 7.4vw, 36px); }
+  .t2{ font-size: clamp(15px, 4.8vw, 20px); }
+  .lead{ font-size: 13px; margin-bottom: 6px; }
+
+  /* SPは譜面をさらに静かに */
+  .score{
+    width: clamp(190px, 58vw, 300px);
+    opacity: 0.20;
+  }
+}

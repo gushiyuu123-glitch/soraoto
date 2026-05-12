@@ -1,0 +1,102 @@
+/* components/RevealImage.module.css */
+
+/* 画像ラッパー（Revealが付ける .reveal/.on と同居） */
+.img{
+  position: relative;
+  isolation: isolate;
+  transform-origin: 50% 62%;
+}
+
+/* ── 雲：光（白い気配） ───────────────── */
+.img::before{
+  content:"";
+  position:absolute;
+  inset:-22%;
+  z-index: 2;
+  pointer-events:none;
+
+  /* “雲の塊”を複数作る：輪郭は作らず、重なりで厚みを出す */
+  background:
+    radial-gradient(ellipse 36% 28% at 26% 34%, rgba(255,255,255,.30) 0%, transparent 70%),
+    radial-gradient(ellipse 42% 32% at 52% 46%, rgba(255,255,255,.22) 0%, transparent 72%),
+    radial-gradient(ellipse 34% 26% at 70% 38%, rgba(255,255,255,.18) 0%, transparent 74%),
+    radial-gradient(ellipse 44% 36% at 44% 68%, rgba(255,255,255,.14) 0%, transparent 76%);
+
+  opacity: 0;
+  filter: blur(0.25px);
+  transform: translate3d(-18px, 18px, 0) scale(1.03);
+  mix-blend-mode: screen;
+}
+
+/* ── 雲：影（薄い陰で“厚み”） ───────────────── */
+.img::after{
+  content:"";
+  position:absolute;
+  inset:-22%;
+  z-index: 1;
+  pointer-events:none;
+
+  background:
+    radial-gradient(ellipse 40% 30% at 30% 40%, rgba(12,26,36,.10) 0%, transparent 68%),
+    radial-gradient(ellipse 46% 34% at 56% 52%, rgba(12,26,36,.08) 0%, transparent 72%),
+    radial-gradient(ellipse 38% 28% at 72% 46%, rgba(12,26,36,.06) 0%, transparent 74%);
+
+  opacity: 0;
+  filter: blur(0.25px);
+  transform: translate3d(-10px, 24px, 0) scale(1.04);
+  mix-blend-mode: multiply;
+}
+
+/* on になった瞬間だけ “出現→流れる→溶ける” */
+:global(.reveal.on).img::before{
+  animation: cloudLight 1.75s cubic-bezier(.22,1,.36,1) both;
+}
+:global(.reveal.on).img::after{
+  animation: cloudShade 1.85s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes cloudLight{
+  0%   { opacity:0;   transform: translate3d(-18px, 18px,0) scale(1.03); }
+  18%  { opacity:.22; }
+  55%  { opacity:.14; transform: translate3d(10px, -10px,0) scale(1.05); }
+  100% { opacity:0;   transform: translate3d(26px, -30px,0) scale(1.07); }
+}
+
+@keyframes cloudShade{
+  0%   { opacity:0;   transform: translate3d(-10px, 24px,0) scale(1.04); }
+  22%  { opacity:.16; }
+  60%  { opacity:.10; transform: translate3d(14px, -14px,0) scale(1.06); }
+  100% { opacity:0;   transform: translate3d(32px, -36px,0) scale(1.08); }
+}
+
+/* ── 画像本体：消さない。解像だけ“立ち上げる” ─────────── */
+.img :where(img, picture, video){
+  display:block;
+  width:100%;
+  height:auto;
+
+  /* 初期：わずかに“霞んだ空気” */
+  transform: translate3d(0, 8px, 0) scale(1.015);
+  filter: blur(0.25px) saturate(.98) contrast(.94) brightness(1.02);
+
+  transition:
+    transform 1.35s cubic-bezier(.22,1,.36,1),
+    filter    1.35s cubic-bezier(.22,1,.36,1);
+}
+
+/* on：像が整う */
+:global(.reveal.on).img :where(img, picture, video){
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0) saturate(1) contrast(1) brightness(1);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .img::before,
+  .img::after{ display:none; }
+
+  .img :where(img, picture, video){
+    transform:none;
+    filter:none;
+    transition:none;
+  }
+}

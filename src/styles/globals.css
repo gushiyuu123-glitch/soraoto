@@ -1,0 +1,158 @@
+/* ═══════════════════════════════════════════════════════════
+   globals.css — SORAOTO (anti-template edition)
+   ・Google Fonts依存を捨てる（既視感を根から断つ）
+   ・和文はOS明朝／UIはOSサンセリフで“紙面の生”を残す
+   ・組版の癖（palt/kerning/synthesis）を固定して品を作る
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Tokens ─────────────────────────────────────────────── */
+:root{
+  /* UI（説明）＝OSサンセリフで自然な読み心地 */
+  --font-ui:
+    system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI",
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", "Meiryo",
+    sans-serif;
+
+  /* 見出し（詩）＝OS明朝で“紙面”に寄せる（Shipporiの既視感を捨てる） */
+  --font-poem:
+    "Yu Mincho", "游明朝",
+    "Hiragino Mincho ProN", "Hiragino Mincho Pro",
+    "MS PMincho",
+    serif;
+
+  /* ラテンの気配（Italic）＝OSクラシックで十分。余計に盛らない */
+  --font-ital:
+    "Palatino Linotype", "Palatino",
+    "Georgia",
+    "Times New Roman",
+    serif;
+
+  /* ink（rgba(var(--ink), .xx) で使う） */
+  --ink: 12, 26, 36;
+
+  /* paper（地） */
+  --paper: 247, 251, 255;
+
+  /* hairline */
+  --hairline: rgba(12, 26, 36, 0.10);
+
+  /* 便利トーン（テンプレ回避：黒を“抜く”前提の段階色） */
+  --ink-1: rgba(var(--ink), 0.88);
+  --ink-2: rgba(var(--ink), 0.74);
+  --ink-3: rgba(var(--ink), 0.58);
+  --ink-hair: rgba(var(--ink), 0.18);
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+}
+
+html, body{
+  height: 100%;
+}
+
+html{
+  background: rgb(var(--paper));
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body{
+  margin: 0;
+  background: rgb(var(--paper));
+  color: var(--ink-1);
+  font-family: var(--font-ui);
+  font-weight: 400;
+  overflow-x: hidden;
+
+  /* “テンプレっぽい均一感”を消して紙面の品へ */
+  font-kerning: normal;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1, "palt" 1;
+}
+
+/* メディアは暴れさせない */
+img, svg, video, canvas{
+  display: block;
+  max-width: 100%;
+}
+
+/* リンクは世界観優先（各コンポーネントで装飾） */
+a{ color: inherit; }
+
+/* 選択時も品を崩さない */
+::selection{
+  background: rgba(12, 26, 36, 0.12);
+}
+
+/* スクロールバー：細く、主張しない */
+::-webkit-scrollbar{ width: 4px; }
+::-webkit-scrollbar-track{ background: transparent; }
+::-webkit-scrollbar-thumb{
+  background: rgba(12, 26, 36, 0.18);
+  border-radius: 2px;
+}
+/* Firefox */
+*{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(12, 26, 36, 0.18) transparent;
+}
+
+/* フォーカス：細く、静かに（操作性は残す） */
+:focus-visible{
+  outline: 1px solid rgba(12, 26, 36, 0.22);
+  outline-offset: 3px;
+}
+
+/* ── Layer contract ─────────────────────────────────────── */
+#root{
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  isolation: isolate;
+}
+
+.stage{
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Reveal（サイトの呼吸） ─────────────────────────────── */
+.reveal{
+  --ry: 18px;
+  --s0: 0.995;
+  --s1: 1;
+  --dur: 680ms;
+  --ease: cubic-bezier(.22,1,.36,1);
+  --d: 0ms;
+
+  opacity: 0;
+  transform: translateY(var(--ry)) scale(var(--s0));
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+  transition-delay: var(--d);
+  will-change: opacity, transform;
+}
+
+.reveal.on{
+  opacity: 1;
+  transform: translateY(0) scale(var(--s1));
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

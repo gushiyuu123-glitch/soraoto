@@ -1,0 +1,46 @@
+@keyframes noteBreath{
+  0%   { opacity: 0;   transform: translate3d(var(--sx), var(--sy), 0) rotate(-2deg) scale(0.96); }
+  18%  { opacity: .08; }
+  70%  { opacity: .06; transform: translate3d(var(--mx), var(--my), 0) rotate(2deg)  scale(1.00); }
+  100% { opacity: 0;   transform: translate3d(var(--ex), var(--ey), 0) rotate(6deg)  scale(1.03); }
+}
+
+.wrap{
+  position: fixed;
+  top: clamp(18px, 2.4vw, 34px);
+  right: clamp(22px, 3.2vw, 54px);
+  z-index: 999; /* もう箱に負けない */
+  pointer-events: none;
+  isolation: isolate;
+
+  /* ▼ 位置探し：ここだけいじる（左へ = マイナス / 下へ = プラス） */
+  --ox: 0px;
+  --oy: 0px;
+  transform: translate3d(var(--ox), var(--oy), 0);
+
+  /* 軌道（そのまま） */
+  --sx:  10px;  --sy:  10px;
+  --mx: -6px;   --my: -14px;
+  --ex: -18px;  --ey: -44px;
+}
+.note{
+  width: clamp(84px, 9vw, 128px);
+  height: auto;
+
+  color: rgba(12,26,36,0.9);
+  filter: blur(0.2px);
+
+  /* これが“見える根” */
+  mix-blend-mode: multiply;
+
+  will-change: transform, opacity;
+  animation: noteBreath 3.0s cubic-bezier(.22,1,.36,1) both;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .note{ animation: none; opacity: .04; transform: none; }
+}
+
+@media (max-width: 767px){
+  .wrap{ display: none; }
+}

@@ -1,0 +1,496 @@
+/* src/sections/Footer.module.css — SORAOTO
+   空気と音の終止。背景は“譜面の残像”として溶かす。
+*/
+
+.section{
+  /* 差し替え：Footer用の背景画像（譜面の残像） */
+  --footerBg: url("/images/soraoto-footer-score-mist.jpeg");
+
+  /* 調整つまみ */
+  --bgOpacity: 0.26;   /* 0.18〜0.34 */
+  --bgBlur: 0.14px;    /* 強いblur禁止 */
+  --bgMix: multiply;   /* soft-light にするとさらに柔らかい */
+
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+  padding: clamp(128px, 15vh, 224px) 0 clamp(92px, 11vh, 160px);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* 背景：譜面の残像（上下はみ出し + 外周フェザー） */
+.section::after{
+  content:"";
+  position:absolute;
+  inset: -18% -12%;
+  z-index: -2;
+  pointer-events:none;
+
+  background-image: var(--footerBg);
+  background-size: cover;
+  background-position: 56% 46%;
+  background-repeat: no-repeat;
+
+  opacity: var(--bgOpacity);
+  filter: blur(var(--bgBlur)) saturate(0.98) contrast(1.02);
+  mix-blend-mode: var(--bgMix);
+
+  /* 外周で自然に消す（壁紙化防止） */
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse 74% 64% at 52% 48%,
+      rgba(0,0,0,0.62) 0%,
+      rgba(0,0,0,0.92) 54%,
+      rgba(0,0,0,1) 76%,
+      rgba(0,0,0,0.0) 100%
+    );
+  mask-image:
+    radial-gradient(
+      ellipse 74% 64% at 52% 48%,
+      rgba(0,0,0,0.62) 0%,
+      rgba(0,0,0,0.92) 54%,
+      rgba(0,0,0,1) 76%,
+      rgba(0,0,0,0.0) 100%
+    );
+}
+
+/* 上の境界：紙に戻して切れ目を殺す */
+.section::before{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  top:-1px;
+  height: clamp(72px, 11vh, 132px);
+  pointer-events:none;
+  z-index: -1;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(247,251,255,0) 0%,
+    rgba(247,251,255,0.86) 56%,
+    rgba(247,251,255,1) 100%
+  );
+}
+
+/* ===== Layout ===== */
+.inner{
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4.5vw, 82px);
+
+  display: grid;
+  grid-template-columns: 1px minmax(0, 560px) minmax(0, 1fr);
+  grid-template-areas:
+    "rail main nav"
+    "rail divider divider"
+    "rail bottom bottom";
+  gap: clamp(34px, 4.4vw, 88px);
+  align-items: start;
+}
+
+/* 左レール */
+.rail{
+  grid-area: rail;
+  width: 1px;
+  height: clamp(560px, 62vh, 900px);
+  margin-top: 10px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(var(--ink),0.08) 14%,
+    rgba(var(--ink),0.18) 46%,
+    rgba(var(--ink),0.08) 78%,
+    transparent 100%
+  );
+}
+
+/* ===== Main ===== */
+.main{
+  grid-area: main;
+  position: relative;
+  isolation: isolate;
+}
+
+/* 譜面（終止） */
+.staff{
+  width: clamp(360px, 40vw, 560px);
+  height: auto;
+  display: block;
+  margin: 0 0 18px;
+
+  opacity: 0.28;
+  filter: blur(0.10px);
+  transform: rotate(-1.4deg);
+  transform-origin: left center;
+
+  /* “空気の中に消える” */
+  -webkit-mask-image: radial-gradient(
+    ellipse 74% 66% at 40% 54%,
+    rgba(0,0,0,0.72) 0%,
+    rgba(0,0,0,0.22) 60%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 74% 66% at 40% 54%,
+    rgba(0,0,0,0.72) 0%,
+    rgba(0,0,0,0.22) 60%,
+    transparent 100%
+  );
+}
+
+/* 5本の譜線 */
+.staffLine{
+  fill: none;
+  stroke: rgba(var(--ink), 0.10);
+  stroke-width: 1;
+}
+
+/* 小節線/終止線 */
+.barThin{
+  stroke: rgba(var(--ink), 0.14);
+  stroke-width: 1;
+}
+.barBold{
+  stroke: rgba(var(--ink), 0.18);
+  stroke-width: 2;
+}
+
+/* 音符 */
+.noteHead{
+  fill: rgba(var(--ink), 0.14);
+  stroke: none;
+  opacity: 0.92;
+}
+.noteStem{
+  stroke: rgba(var(--ink), 0.12);
+  stroke-width: 1;
+  opacity: 0.85;
+}
+
+.brand{
+  margin: 0 0 10px;
+  font-family: var(--font-ital);
+  font-size: 14px;
+  letter-spacing: 0.22em;
+  color: rgba(var(--ink), 0.66);
+}
+
+.meta{
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: rgba(var(--ink), 0.46);
+  text-transform: uppercase;
+}
+
+.note{
+  margin: 0 0 10px;
+  max-width: 34em;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.95;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.54);
+}
+
+/* SEO：紙の端に低音量（見えるが主張しない） */
+.seo{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  line-height: 1.9;
+  letter-spacing: 0.06em;
+  color: rgba(var(--ink), 0.40);
+  opacity: 0.70;
+}
+
+/* ===== Nav ===== */
+.nav{
+  grid-area: nav;
+  display: grid;
+  justify-items: end;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.navItem{
+  text-decoration: none;
+  color: rgba(var(--ink), 0.56);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.10em;
+
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--ink), 0.14);
+  width: fit-content;
+
+  transition: color .35s ease, border-bottom-color .35s ease, transform .35s ease;
+}
+
+.navArrow{
+  display:inline-block;
+  opacity: 0.65;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+.navItem:hover{
+  color: rgba(var(--ink), 0.80);
+  border-bottom-color: rgba(var(--ink), 0.34);
+  transform: translateY(-1px);
+}
+.navItem:hover .navArrow{
+  transform: translateX(6px);
+  opacity: 0.95;
+}
+
+/* ===== Divider ===== */
+.divider{
+  grid-area: divider;
+  height: 1px;
+  margin-top: clamp(18px, 3vh, 28px);
+
+  background: linear-gradient(
+    to right,
+    rgba(var(--ink),0.04),
+    rgba(var(--ink),0.12) 18%,
+    rgba(var(--ink),0.06) 72%,
+    transparent 100%
+  );
+  opacity: 0.75;
+}
+
+/* ===== Bottom ===== */
+.bottom{
+  grid-area: bottom;
+  margin-top: clamp(18px, 3.5vh, 28px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.copy{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: rgba(var(--ink), 0.40);
+}
+
+.credit{
+  text-decoration: none;
+  color: rgba(var(--ink), 0.50);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--ink), 0.12);
+  transition: color .35s ease, border-bottom-color .35s ease, transform .35s ease;
+}
+
+/* クレジット前の細線（“署名”） */
+.creditLine{
+  width: 34px;
+  height: 1px;
+  background: rgba(var(--ink), 0.12);
+  opacity: 0.72;
+  transition: width .35s ease, opacity .35s ease, background .35s ease;
+}
+
+.credit:hover{
+  color: rgba(var(--ink), 0.74);
+  border-bottom-color: rgba(var(--ink), 0.28);
+  transform: translateY(-1px);
+}
+.credit:hover .creditLine{
+  width: 52px;
+  opacity: 0.92;
+  background: rgba(var(--ink), 0.18);
+}
+
+/* ===== SP ===== */
+@media (max-width: 767px){
+  .inner{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "nav"
+      "divider"
+      "bottom";
+    gap: 18px;
+  }
+
+  .rail{ display:none; }
+
+  .nav{
+    justify-items: start;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 16px;
+    padding-top: 8px;
+  }
+
+  .bottom{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .staff{
+    width: min(520px, 100%);
+    opacity: 0.22;
+  }
+
+  /* SPは壁紙化しやすいので背景を弱める */
+  .section{
+    --bgOpacity: 0.20;
+  }
+
+  .divider{
+    margin-top: 10px;
+    opacity: 0.65;
+  }
+}
+/* ✅ クリックできる層を明示的に最前面へ */
+.main, .nav, .bottom{
+  position: relative;
+  z-index: 3;
+}
+
+/* ✅ 装飾は全部クリックを吸わない */
+.staff, .rail, .divider{
+  pointer-events: none;
+}
+
+/* ✅ 背景の疑似要素も絶対に吸わない */
+.section::before,
+.section::after{
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 念のため：リンクは確実にクリック対象 */
+.navItem,
+.credit{
+  pointer-events: auto;
+  cursor: pointer;
+}
+/* ✅ 背景/装飾は全部クリックを吸わない */
+.section::before,
+.section::after,
+.staff,
+.rail,
+.divider{
+  pointer-events: none;
+}
+
+/* ✅ 背景より前に確実に出す */
+.inner{
+  position: relative;
+  z-index: 1;
+}
+
+/* ── brand：画像ロゴ ── */
+.brandWrap{ width: fit-content; }
+
+.brandLink{
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 0;
+  text-decoration: none;
+}
+
+.brandImg{
+  height: clamp(18px, 1.9vw, 26px); /* ← Headerと同じ思想 */
+  width: auto;
+  display: block;
+  opacity: 0.82;
+  filter: saturate(0.98) contrast(1.02);
+  transform: translateY(1px);
+}
+
+.srOnly{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── nav：縦群を“もっと下”へ ── */
+.nav{
+  /* 元の padding-top:10px は要らない */
+  padding-top: 0;
+  margin-top: clamp(46px, 7.5vh, 132px); /* ←ここで下げる */
+}
+
+/* Reveal wrapper（クリックは中のaが拾う） */
+.navItemWrap{
+  justify-self: end; /* 右寄せ維持 */
+}
+
+.navItem{
+  text-decoration: none;
+  color: rgba(var(--ink), 0.56);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.10em;
+
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--ink), 0.14);
+  width: fit-content;
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  transition: color .35s ease, border-bottom-color .35s ease, transform .35s ease;
+}
+
+.navArrow{
+  display:inline-block;
+  opacity: 0.65;
+  transition: transform .35s ease, opacity .35s ease;
+}
+
+.navItem:hover{
+  color: rgba(var(--ink), 0.80);
+  border-bottom-color: rgba(var(--ink), 0.34);
+  transform: translateY(-1px);
+}
+.navItem:hover .navArrow{
+  transform: translateX(6px);
+  opacity: 0.95;
+}
+
+/* credit wrapper */
+.creditWrap{ justify-self: end; }
+
+/* SPは従来どおり横並びにする */
+@media (max-width: 767px){
+  .nav{
+    margin-top: 0;
+  }
+  .navItemWrap{
+    justify-self: start;
+  }
+}

@@ -1,0 +1,297 @@
+/* src/sections/Lesson.module.css */
+
+/* ✅ 境界は割らない。紙を固定して、呼吸は内側で作る */
+.section{
+  position: relative;
+  isolation: isolate;
+
+  background: rgb(var(--paper));
+
+  /* 穴禁止 */
+  margin-top: 0;
+
+  /* 呼吸（上多め/下は次の余韻） */
+  padding: clamp(104px, 12vh, 176px) 0 clamp(92px, 11vh, 156px);
+}
+
+/* ✅ Lessonの終端だけ“雲で溶かす”（次セクションへ渡す） */
+.section::after{
+  content:"";
+  position:absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -1px;
+  height: clamp(140px, 16vh, 260px);
+  pointer-events:none;
+  z-index: 0;
+
+  background:
+    radial-gradient(62% 78% at 18% 72%, rgba(255,255,255,.20) 0%, transparent 70%),
+    radial-gradient(56% 66% at 52% 58%, rgba(255,255,255,.16) 0%, transparent 74%),
+    radial-gradient(62% 76% at 86% 70%, rgba(255,255,255,.14) 0%, transparent 74%),
+    radial-gradient(120% 120% at 50% 100%, rgba(var(--paper), .55) 0%, transparent 62%);
+
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 42%, transparent 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 42%, transparent 100%);
+
+  opacity: .75;
+  filter: blur(0.18px);
+}
+
+/* コンテンツは雲より上へ */
+.inner{
+  position: relative;
+  z-index: 1;
+}
+
+/* 1行固定：rail / visual / main を “同じ行” に縛る */
+.inner{
+  width: min(1320px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4vw, 60px);
+
+  display: grid;
+  grid-template-columns: 2px minmax(320px, 520px) minmax(0, 1fr);
+  grid-template-areas: "rail visual main";
+  grid-template-rows: auto;
+  grid-auto-rows: min-content;
+
+  column-gap: clamp(44px, 5.2vw, 96px);
+  row-gap: clamp(22px, 3vw, 44px);
+
+  align-items: start;
+  justify-items: stretch;
+}
+
+/* ★暗黙行に押し出されない契約 */
+.rail,
+.visualWrap,
+.main{
+  grid-row: 1;
+  align-self: start;
+}
+
+/* ── rail ───────────────────────────── */
+.rail{
+  grid-area: rail;
+  width: 1px;
+  height: clamp(560px, 62vh, 860px);
+  margin-top: 8px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(12,26,36,0.12) 16%,
+    rgba(12,26,36,0.24) 52%,
+    rgba(12,26,36,0.08) 84%,
+    transparent 100%
+  );
+}
+
+/* ── visual（PC左） ─────────────────── */
+.visualWrap{
+  grid-area: visual;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding-top: clamp(8px, 1.2vh, 14px);
+  min-width: 0;
+}
+
+.visual{
+  margin: 0;
+  position: relative;
+  width: 100%;
+}
+
+.visualImg{
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateZ(0);
+}
+
+/* 直線境界を作らない“薄い膜” */
+.visualVeil{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse 78% 64% at 40% 30%,
+      rgba(255,255,255,0.16) 0%,
+      rgba(255,255,255,0.06) 40%,
+      transparent 74%
+    );
+  filter: blur(0.25px);
+  opacity: 0.95;
+}
+
+.visualMeta{ position: relative; }
+
+.metaKicker{
+  margin: 0 0 8px;
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(12,26,36,0.52);
+}
+
+.metaLine{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: rgba(12,26,36,0.56);
+}
+
+/* ── main（文章 / PC右） ─────────────── */
+.main{
+  grid-area: main;
+  position: relative;
+  isolation: isolate;
+  max-width: 720px;
+  min-width: 0;
+}
+
+/* 箱禁止：可読は“膜”で取る */
+.main::before{
+  content:"";
+  position: absolute;
+  inset: -28px -34px -18px -28px;
+  pointer-events: none;
+  z-index: -2;
+
+  background: radial-gradient(
+    ellipse 62% 76% at 18% 38%,
+    rgba(255,255,255,0.20) 0%,
+    rgba(255,255,255,0.10) 34%,
+    transparent 72%
+  );
+  filter: blur(0.25px);
+  opacity: 0.95;
+}
+
+/* Atmos を本文の下敷きに固定（雲が本文より前に出ない） */
+.main :global(.atmos){ z-index: -1; }
+
+/* ── text ───────────────────────────── */
+.kicker{
+  margin: 0 0 10px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(12,26,36,0.44);
+}
+
+.title{
+  margin: 0 0 18px;
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  line-height: 1.14;
+  color: rgba(12,26,36,0.84);
+}
+
+.t1{
+  display: block;
+  font-size: clamp(26px, 3.0vw, 42px);
+  color: rgba(12,26,36,0.82);
+}
+
+.t2{
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(17px, 2.0vw, 26px);
+  color: rgba(12,26,36,0.60);
+}
+
+.lead{
+  margin: 0 0 18px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 2.05;
+  letter-spacing: 0.02em;
+  color: rgba(12,26,36,0.72);
+}
+
+/* 項目にしない：1行ラベル */
+.flowLine{
+  margin: 0 0 16px;
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  color: rgba(12,26,36,0.46);
+  text-transform: uppercase;
+
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.flowSep{ opacity: 0.42; }
+
+.target{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 2.0;
+  color: rgba(12,26,36,0.58);
+}
+
+/* ── SP ─────────────────────────────── */
+@media (max-width: 767px){
+  .section{
+    margin-top: 0;
+    padding: clamp(86px, 11vh, 140px) 0 clamp(72px, 9vh, 118px);
+  }
+
+  .inner{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "main"
+      "visual";
+    gap: 22px;
+  }
+
+  .rail{ display: none; }
+  .visualWrap{ padding-top: 6px; }
+
+  .t1{ font-size: clamp(24px, 7.2vw, 34px); }
+  .t2{ font-size: clamp(16px, 5.1vw, 22px); }
+
+  .lead{ font-size: 13px; }
+}
+
+/* 本文が座標の親 */
+.main{
+  position: relative;
+  isolation: isolate;
+}
+.cloudUnder{
+  position: absolute;
+  left: auto;
+  right: clamp(-44px, -3.2vw, -18px);
+
+  bottom: -420px;
+  width: clamp(520px, 48vw, 980px);
+  height: auto;
+
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  filter: blur(0.18px);
+
+  pointer-events: none;
+  z-index: -1;
+  transform: rotate(-1.1deg);
+}
+
+@media (max-width: 767px){
+  .cloudUnder{ display: none; }
+}

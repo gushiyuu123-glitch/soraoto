@@ -1,0 +1,344 @@
+/* src/sections/Invitation.module.css
+   SORAOTO — Invitation
+   目的：文字の距離（呼吸）を整えて、編集感の密度を上げる
+*/
+
+.section{
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+
+  /* ✅ 上をしっかり増やす（Hero→次セクションの余韻） */
+  padding:
+    clamp(140px, 15.8vh, 240px)
+    0
+    clamp(104px, 12vh, 180px);
+
+  isolation: isolate;
+}
+/* 上端の溶かしは使わない（帯の再発源） */
+.section::before{ content: none; }
+
+/* 下端だけ“雲で溶かす”（次セクションへ渡す） */
+.section::after{
+  content:"";
+  position:absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -1px;
+  height: clamp(140px, 16vh, 260px);
+  pointer-events:none;
+  z-index: 0;
+
+  background:
+    radial-gradient(62% 78% at 18% 72%, rgba(255,255,255,.20) 0%, transparent 70%),
+    radial-gradient(56% 66% at 52% 58%, rgba(255,255,255,.16) 0%, transparent 74%),
+    radial-gradient(62% 76% at 86% 70%, rgba(255,255,255,.14) 0%, transparent 74%),
+    radial-gradient(120% 120% at 50% 100%, rgba(var(--paper), .55) 0%, transparent 62%);
+
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 42%, transparent 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,.86) 42%, transparent 100%);
+
+  opacity: .76;
+  filter: blur(0.18px);
+}
+
+/* layout */
+.inner{
+  position: relative;
+  z-index: 1;
+
+  width: min(1480px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4.5vw, 76px);
+
+  display: grid;
+  grid-template-columns: 2px minmax(0, 1fr) minmax(340px, 460px);
+  gap: clamp(26px, 3.2vw, 56px);
+  align-items: start;
+}
+
+/* 編集の導入線 */
+.rail{
+  width: 1px;
+  height: clamp(580px, 62vh, 860px);
+  margin-top: 10px;
+  align-self: start;
+
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(12,26,36,0.12) 18%,
+    rgba(12,26,36,0.22) 52%,
+    rgba(12,26,36,0.06) 84%,
+    transparent 100%
+  );
+}
+
+.main{
+  position: relative;
+  max-width: 760px;
+  isolation: isolate;
+}
+
+/* 箱禁止：本文の可読は膜で取る */
+.main::before{
+  content:"";
+  position:absolute;
+  inset: -26px -34px -22px -28px;
+  pointer-events:none;
+  z-index:-1;
+
+  background: radial-gradient(
+    ellipse 62% 78% at 10% 42%,
+    rgba(255,255,255,0.24) 0%,
+    rgba(255,255,255,0.11) 34%,
+    transparent 72%
+  );
+  filter: blur(0.25px);
+  opacity: 0.95;
+}
+
+/* —— text rhythm —— */
+.kicker{
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(12,26,36,0.44);
+}
+
+.title{
+  margin: 0 0 clamp(22px, 2.8vh, 34px);
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  line-height: 1.12;
+  color: rgba(12,26,36,0.86);
+}
+
+.t1{
+  display:block;
+  font-size: clamp(28px, 3.0vw, 46px);
+  color: rgba(12,26,36,0.84);
+  line-break: strict;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.t2{
+  display:block;
+  font-size: clamp(17px, 1.9vw, 28px);
+  color: rgba(12,26,36,0.60);
+  margin-top: 10px; /* ←タイトルの余韻を出す */
+  line-height: 1.35;
+}
+
+.lead{
+  margin: 0 0 24px; /* ←pointsへ渡す距離を少し増やす */
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 2.00;
+  letter-spacing: 0.02em;
+  color: rgba(12,26,36,0.70);
+}
+
+/* points：密度は上げすぎず、でも“編集”の拍を出す */
+.points{
+  list-style:none;
+  padding:0;
+  margin: 0 0 22px;
+
+  display:grid;
+  gap: 16px;
+}
+
+.point{
+  display:grid;
+  grid-template-columns: 52px 1fr;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.no{
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(12,26,36,0.38);
+  transform: translateY(1px);
+}
+
+.text{
+  margin:0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.92;
+  color: rgba(12,26,36,0.80);
+}
+
+.target{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 2.0;
+  color: rgba(12,26,36,0.56);
+}
+
+.note{
+  margin: 14px 0 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: rgba(12,26,36,0.54);
+}
+
+.noteEm{
+  font-family: var(--font-ital);
+  font-style: italic;
+  letter-spacing: 0.12em;
+  color: rgba(12,26,36,0.76);
+}
+
+/* —— Right side —— */
+.side{
+  position: relative;
+  padding-top: 6px;
+}
+
+.visual{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: visible;
+}
+
+.visualImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 50%;
+
+  transform: scale(1.02);
+  filter: saturate(0.98) contrast(1.02);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 72% 78% at 46% 38%,
+    black 0%,
+    rgba(0,0,0,0.92) 42%,
+    rgba(0,0,0,0.45) 70%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 72% 78% at 46% 38%,
+    black 0%,
+    rgba(0,0,0,0.92) 42%,
+    rgba(0,0,0,0.45) 70%,
+    transparent 92%
+  );
+}
+
+.visualVeil{
+  position:absolute;
+  inset: -10% -10% -10% -10%;
+  pointer-events:none;
+
+  background: radial-gradient(
+    ellipse 54% 58% at 46% 28%,
+    rgba(255,255,255,0.16) 0%,
+    rgba(255,255,255,0.08) 34%,
+    transparent 70%
+  );
+  filter: blur(0.25px);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 74% at 50% 40%,
+    black 0%,
+    rgba(0,0,0,0.55) 70%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 74% at 50% 40%,
+    black 0%,
+    rgba(0,0,0,0.55) 70%,
+    transparent 92%
+  );
+}
+
+.sideMeta{
+  margin-top: 18px;
+  position: relative;
+}
+
+.sideMeta::before{
+  content:"";
+  position:absolute;
+  inset: -18px -14px -16px -14px;
+  z-index:-1;
+  pointer-events:none;
+
+  background: radial-gradient(
+    ellipse 72% 74% at 36% 22%,
+    rgba(255,255,255,0.18) 0%,
+    rgba(255,255,255,0.08) 36%,
+    transparent 74%
+  );
+  filter: blur(0.25px);
+  opacity: 0.95;
+}
+
+.sideKicker{
+  margin: 0 0 10px;
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: rgba(12,26,36,0.52);
+}
+
+.sideLine{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.95;
+  color: rgba(12,26,36,0.62);
+}
+
+/* 雲：本文の“下敷き” */
+.cloudUnder{
+  position: absolute;
+  left: clamp(10px, 1.6vw, 34px);
+  bottom: -360px;
+
+  width: clamp(260px, 26vw, 560px);
+  height: auto;
+
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  filter: blur(0.18px);
+
+  pointer-events: none;
+  z-index: -1;
+  transform: rotate(-1.2deg);
+}
+
+/* ── SP ───────────────────────────────── */
+@media (max-width: 767px){
+  .inner{
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .rail{ display:none; }
+
+  .side{ margin-top: 10px; }
+
+  .visual{ aspect-ratio: 16 / 10; }
+  .visualImg{ object-position: 58% 48%; }
+
+  .cloudUnder{ display: none; }
+
+  /* SPは密度を少し上げる */
+  .lead{ margin-bottom: 20px; }
+  .points{ gap: 14px; margin-bottom: 18px; }
+}
