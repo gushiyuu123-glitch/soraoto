@@ -1,14 +1,77 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Google翻訳を完全無効化 -->
+
+    <!-- title / description（検索の顔） -->
+    <title>SORAOTO｜那覇のピアノ個人レッスン（予約制）</title>
+    <meta
+      name="description"
+      content="那覇でマンツーマンのピアノ個人レッスン。体験レッスンから予約制で受付。子ども〜大人まで、基礎から丁寧に。"
+    />
+
+    <!-- canonical（正本） -->
+    <link rel="canonical" href="https://soraoto-delta.vercel.app/" />
+
+    <!-- robots -->
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+
+    <!-- Google翻訳を無効化 -->
     <meta name="google" content="notranslate" />
-    <title>soraoto</title>
+
+    <!-- theme / icons -->
+    <meta name="theme-color" content="#f7fbff" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- OGP -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:site_name" content="SORAOTO" />
+    <meta property="og:title" content="SORAOTO｜那覇のピアノ個人レッスン（予約制）" />
+    <meta
+      property="og:description"
+      content="那覇でマンツーマンのピアノ個人レッスン。体験レッスンから予約制で受付。"
+    />
+    <meta property="og:url" content="https://soraoto-delta.vercel.app/" />
+    <meta property="og:image" content="https://soraoto-delta.vercel.app/ogp-soraoto.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- X(Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SORAOTO｜那覇のピアノ個人レッスン（予約制）" />
+    <meta
+      name="twitter:description"
+      content="那覇でマンツーマンのピアノ個人レッスン。体験レッスンから予約制で受付。"
+    />
+    <meta name="twitter:image" content="https://soraoto-delta.vercel.app/ogp-soraoto.png" />
+
+    <!-- sitemap hint -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MusicSchool",
+        "name": "SORAOTO",
+        "description": "那覇のマンツーマン ピアノ個人レッスン（予約制）",
+        "url": "https://soraoto-delta.vercel.app/",
+        "areaServed": "那覇",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "那覇市",
+          "addressRegion": "沖縄県",
+          "addressCountry": "JP"
+        }
+      }
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
