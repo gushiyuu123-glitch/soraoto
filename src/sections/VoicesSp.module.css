@@ -1,0 +1,429 @@
+.section{
+  --bg: url("/images/voices-bg.jpeg");
+ --bgOpacity: 0.24;   /* ✅ まず見える値 */
+  --bgBlur: 0.14px;     /* 0でもOK。濁るなら 0.10〜0.18px */
+ --veilOpacity: 0.38;  /* ✅ 白膜は強すぎ禁止 */
+
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+  padding: clamp(128px, 15vh, 220px) 0 clamp(118px, 14vh, 198px);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* 背景画像（中央を“少し”静かにするマスク） */
+.section::before{
+  content:"";
+  position:absolute;
+  inset: -6% -6%;
+  z-index: -2;
+  pointer-events:none;
+
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  opacity: var(--bgOpacity);
+  filter: blur(var(--bgBlur)) saturate(0.98) contrast(1.02);
+  mix-blend-mode: normal; /* ✅ まずnormal。見えたら multiply でもOK */
+
+  /* ✅ 削りすぎない：中心0.55〜外周1.0 */
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse 68% 58% at 50% 48%,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.78) 52%,
+      rgba(0,0,0,0.92) 78%,
+      rgba(0,0,0,1) 100%
+    );
+  mask-image:
+    radial-gradient(
+      ellipse 68% 58% at 50% 48%,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.78) 52%,
+      rgba(0,0,0,0.92) 78%,
+      rgba(0,0,0,1) 100%
+    );
+}
+
+/* 光膜 + 上下フェード */
+.section::after{
+  content:"";
+  position:absolute;
+  inset: -10%;
+  z-index: -1;
+  pointer-events:none;
+
+  background:
+    /* 上端を紙に溶かす */
+    linear-gradient(
+      to bottom,
+      rgb(var(--paper)) 0%,
+      rgba(247,251,255,0.96) 7%,
+      rgba(247,251,255,0.74) 14%,
+      rgba(247,251,255,0.30) 22%,
+      rgba(247,251,255,0) 30%
+    ),
+
+    /* 下端を紙に溶かす */
+    linear-gradient(
+      to top,
+      rgb(var(--paper)) 0%,
+      rgba(247,251,255,0.96) 7%,
+      rgba(247,251,255,0.74) 14%,
+      rgba(247,251,255,0.30) 22%,
+      rgba(247,251,255,0) 30%
+    ),
+
+    /* 既存の光膜 */
+    radial-gradient(
+      1200px 720px at 52% 12%,
+      rgba(255,255,255,0.24),
+      transparent 62%
+    ),
+    radial-gradient(
+      980px 620px at 18% 86%,
+      rgba(255,255,255,0.12),
+      transparent 66%
+    );
+
+  opacity: var(--veilOpacity);
+   filter: blur(0.12px);
+  mix-blend-mode: screen;
+}
+/* センターカラム */
+.inner{
+  width: min(980px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(22px, 4vw, 56px);
+  position: relative;
+}
+
+/* ── noteMark（描き出し） ── */
+.noteWrap{
+  position: absolute;
+  left: clamp(4px, 0.8vw, 10px);
+  top: clamp(6px, 1vh, 14px);
+  z-index: 1;
+  pointer-events: none;
+
+  /* Revealのtransformと衝突させないため */
+  --ry: 0px;
+  --s0: 1;
+}
+
+.noteMark{
+  width: clamp(120px, 14vw, 170px);
+  height: auto;
+  stroke: rgba(var(--ink), 0.14);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.60;
+  rotate: -2deg;      /* transformじゃなくrotateで */
+  filter: blur(0.10px);
+}
+
+.noteMark path{
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  transition: stroke-dashoffset 1.15s cubic-bezier(.22,1,.36,1);
+  transition-delay: 80ms;
+}
+
+.noteMark circle{
+  opacity: 0;
+  scale: 0.92;
+  transform-origin: center;
+  transition: opacity .7s cubic-bezier(.22,1,.36,1), scale .7s cubic-bezier(.22,1,.36,1);
+  transition-delay: 260ms;
+}
+
+.noteWrap.on .noteMark path{ stroke-dashoffset: 0; }
+.noteWrap.on .noteMark circle{ opacity: .82; scale: 1; }
+
+/* ── header text ── */
+.kicker{
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.40);
+}
+
+.title{
+  margin: 0 0 18px;
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.004em;
+  line-height: 1.08;
+}
+
+.t1{
+  display:block;
+  font-size: clamp(28px, 3.0vw, 48px);
+  color: rgba(var(--ink), 0.72);
+  text-wrap: balance;
+}
+
+.t2{
+  display:block;
+  margin-top: 12px;
+  font-size: clamp(15px, 1.6vw, 22px);
+  line-height: 1.5;
+  color: rgba(var(--ink), 0.54);
+}
+
+.lead{
+  margin: 0 0 clamp(26px, 3.4vh, 42px);
+  max-width: 34em;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.50);
+}
+
+/* ── 譜線トラック（“乗る”土台） ── */
+.trackWrap{
+  position: absolute;
+  left: 50%;
+  top: clamp(220px, 24vh, 280px);
+  translate: -50% 0;     /* ✅ transform衝突回避 */
+  width: min(920px, 100%);
+  pointer-events: none;
+  z-index: -1;
+
+  --ry: 0px; /* Revealと衝突させない */
+  --s0: 1;
+}
+
+.track{
+  width: 100%;
+  height: auto;
+ 
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.68;
+  stroke: rgba(var(--ink), 0.07);
+  filter: blur(0.08px);
+
+  -webkit-mask-image: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(0,0,0,.58) 0%, rgba(0,0,0,.18) 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 68% 56% at 50% 50%, rgba(0,0,0,.58) 0%, rgba(0,0,0,.18) 55%, transparent 100%);
+}
+
+.track path{
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  transition: stroke-dashoffset 1.35s cubic-bezier(.22,1,.36,1);
+}
+
+.trackWrap.on .track path{
+  stroke-dashoffset: 0;
+}
+
+/* ── 譜線署名（右上） ── */
+.score{
+  position:absolute;
+  right: clamp(-10px, -1vw, 6px);
+  top: clamp(120px, 14vh, 160px);
+  width: clamp(260px, 30vw, 420px);
+  height: auto;
+  pointer-events:none;
+
+  stroke: rgba(var(--ink), 0.10);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.14;
+  rotate: -2deg;
+  filter: blur(0.12px);
+}
+
+/* ── list ── */
+.list{
+  list-style:none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(40px, 5vh, 70px);
+}
+
+/* 行として見せる（カード禁止） */
+.item{
+  position: relative;
+  padding-bottom: 26px;
+
+  /* “乗ってる”軽さ（Revealデフォルトを少しだけ調整） */
+  --ry: 14px;
+  --s0: 0.997;
+}
+
+.item::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:1px;
+  background: linear-gradient(
+    to right,
+    rgba(var(--ink),0.04),
+    rgba(var(--ink),0.10) 18%,
+    rgba(var(--ink),0.06) 72%,
+    transparent 100%
+  );
+}
+
+/* 音符ヘッド：遅れて点く（“譜線に乗る”） */
+.item::before{
+  content:"";
+  position:absolute;
+  left: clamp(-22px, -1.6vw, -14px);
+  top: 18px;
+
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+
+  background: rgba(var(--ink), 0.10);
+  box-shadow: 0 0 0 1px rgba(var(--ink), 0.06) inset;
+
+  opacity: 0;
+  transform: translateX(-10px) translateY(6px) scale(.92);
+  transition:
+    opacity 680ms cubic-bezier(.22,1,.36,1),
+    transform 680ms cubic-bezier(.22,1,.36,1);
+  transition-delay: var(--noteDelay, 0ms);
+  filter: blur(0.06px);
+}
+
+.item.on::before{
+  opacity: .78;
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+/* リズム：transform禁止（Revealと衝突する）→ marginでズラす */
+.item1{ margin-left: clamp(0px, 0.6vw, 10px); }
+.item2{ margin-left: clamp(10px, 1.6vw, 28px); }
+.item3{ margin-left: clamp(4px, 1.0vw, 16px); }
+
+.head{
+  display:flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.no{
+  font-family: var(--font-ital);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: rgba(var(--ink), 0.34);
+}
+
+.meta{
+  margin:0;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(var(--ink), 0.46);
+}
+
+.quote{
+  margin: 0 0 10px;
+  font-family: var(--font-poem);
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1.62;
+  letter-spacing: 0.004em;
+  color: rgba(var(--ink), 0.64);
+  max-width: 24em;
+}
+
+.after{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.56);
+  max-width: 40em;
+}
+
+/* SP */
+@media (max-width: 767px){
+  .noteMark{ opacity: 0.52; }
+  .score{ opacity: 0.10; right: 0; }
+  .item1,.item2,.item3{ margin-left: 0; }
+  .item::before{ left: -12px; }
+  .track{ opacity: 0.72; }
+}
+/* ★ 追加：音程で音符ヘッドを上下させる（0/1/2） */
+.item{
+  --pitch: 1; /* default */
+}
+
+/* 既存 .item::before を差し替え（top固定→pitch可変へ） */
+.item::before{
+  /* 元のまま */
+  content:"";
+  position:absolute;
+  left: clamp(-22px, -1.6vw, -14px);
+
+  /* ★ここが肝：譜線の高さに合わせて上下 */
+  top: calc(16px + (var(--pitch) * 10px));
+
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+
+  background: rgba(var(--ink), 0.10);
+  box-shadow: 0 0 0 1px rgba(var(--ink), 0.06) inset;
+
+  opacity: 0;
+  transform: translateX(-10px) translateY(6px) scale(.92);
+  transition:
+    opacity 680ms cubic-bezier(.22,1,.36,1),
+    transform 680ms cubic-bezier(.22,1,.36,1);
+  transition-delay: var(--noteDelay, 0ms);
+  filter: blur(0.06px);
+}
+
+.item.on::before{
+  opacity: .78;
+  transform: translateX(0) translateY(0) scale(1);
+}
+
+/* ★追加：右端に“小節線”を薄く入れる（譜面感） */
+.item .head{
+  position: relative;
+}
+
+.item .head::after{
+  content:"";
+  position:absolute;
+  right: 0;
+  top: 4px;
+  width: 1px;
+  height: 34px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(var(--ink), 0.10) 26%,
+    rgba(var(--ink), 0.06) 78%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  filter: blur(0.06px);
+}
+
+/* ★追加：noを“小節番号っぽく” */
+.no{
+  letter-spacing: 0.14em;
+}
+
+/* SPでは小節線をさらに弱く（本文優先） */
+@media (max-width: 767px){
+  .item .head::after{ opacity: 0.38; }
+  .item::before{ left: -12px; }
+}

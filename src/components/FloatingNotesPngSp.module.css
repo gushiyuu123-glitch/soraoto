@@ -1,0 +1,73 @@
+.root{
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+
+  /* 画面外に出さない */
+  overflow: clip;
+  contain: layout paint; /* 軽くする */
+
+  /* 調律つまみ */
+  --gain: 0.74; /* 0.68〜0.82 */
+}
+
+.item{
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+
+  mix-blend-mode: multiply;
+  will-change: transform, opacity;
+
+  animation: floatNote var(--dur) cubic-bezier(.22,1,.36,1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+.img{
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+
+  /* “紙なじみ”だけ。霧にはしない */
+  filter: blur(0.08px) saturate(0.98) contrast(1.02);
+  opacity: 1;
+}
+
+@keyframes floatNote{
+  0%{
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate3d(0, 10px, 0)
+      rotate(var(--r0))
+      scale(var(--s0));
+  }
+
+  16%{ opacity: calc(var(--peak) * 0.78 * var(--gain)); }
+
+  48%{
+    opacity: calc(var(--peak) * 1.00 * var(--gain));
+    transform:
+      translate(-50%, -50%)
+      translate3d(var(--dxm), var(--dym), 0)
+      rotate(calc(var(--r0) * 0.4))
+      scale(calc(var(--s0) + 0.02));
+  }
+
+  82%{ opacity: calc(var(--peak) * 0.48 * var(--gain)); }
+
+  100%{
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate3d(var(--dx), var(--dy), 0)
+      rotate(var(--r1))
+      scale(var(--s1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .item{ animation: none; opacity: 0; }
+}

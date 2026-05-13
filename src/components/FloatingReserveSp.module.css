@@ -1,0 +1,148 @@
+/* FloatingReserveSp.module.css — SORAOTO / SP */
+
+.wrap{
+  position: fixed;
+  right: clamp(12px, 3.6vw, 18px);
+  bottom: calc(clamp(12px, 3.6vw, 18px) + env(safe-area-inset-bottom));
+  z-index: 60;
+
+  pointer-events: none;
+
+  opacity: 0;
+  transform: translateY(12px);
+
+  /* show=false時に完全に消す（透明クリック根絶） */
+  visibility: hidden;
+
+  transition:
+    opacity .55s ease,
+    transform .65s cubic-bezier(.22,1,.36,1),
+    visibility 0s linear .55s;
+}
+
+.on{
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  transition-delay: 0s, 0s, 0s;
+}
+
+/* CTA */
+.cta{
+  pointer-events: none;
+
+  position: relative;
+  display: grid;
+  gap: 3px;
+
+  padding: 12px 12px 10px 12px;
+  width: fit-content;
+
+  text-decoration: none;
+  color: rgba(var(--ink), 0.74);
+  -webkit-tap-highlight-color: transparent;
+
+  isolation: isolate;
+}
+
+.on .cta{ pointer-events: auto; }
+
+/* 膜（箱禁止） */
+.cta::before{
+  content:"";
+  position:absolute;
+  inset: -10px;
+  z-index: -1;
+  pointer-events:none;
+
+  background: radial-gradient(
+    ellipse 76% 88% at 58% 52%,
+    rgba(var(--paper), 0.90) 0%,
+    rgba(var(--paper), 0.56) 26%,
+    rgba(var(--paper), 0.22) 48%,
+    rgba(var(--paper), 0.09) 62%,
+    transparent 78%
+  );
+
+  filter: blur(0.16px);
+  opacity: 0.86;
+}
+
+/* 気配（piano） */
+.cloud{
+  position: absolute;
+
+  /* “はみ出し”を弱める（clipに依存しない寄せ） */
+  right: -14px;
+  bottom: -22px;
+
+  width: clamp(128px, 24vw, 168px);
+  height: auto;
+
+  opacity: 0.34;
+  mix-blend-mode: multiply;
+
+  filter: blur(0.10px) saturate(0.98) contrast(1.02);
+
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* type */
+.kicker{
+  font-family: var(--font-ui);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.42);
+}
+
+.label{
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-weight: 500;
+
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  color: rgba(var(--ink), 0.84);
+  line-height: 1.05;
+
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--ink), 0.16);
+  width: fit-content;
+
+  transition:
+    border-bottom-color .35s ease,
+    transform .35s ease,
+    color .35s ease;
+}
+
+.sub{
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(var(--ink), 0.54);
+}
+
+/* hoverはPC/マウス環境だけ */
+@media (hover:hover) and (pointer:fine){
+  .cta:hover .label{
+    border-bottom-color: rgba(var(--ink), 0.42);
+    transform: translateY(-1px);
+    color: rgba(var(--ink), 0.92);
+  }
+}
+
+.cta:focus-visible{ outline: none; }
+.cta:focus-visible .label{
+  border-bottom-color: rgba(var(--ink), 0.46);
+  color: rgba(var(--ink), 0.92);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .wrap{ transition: none; transform: none; }
+  .cta::before{ filter: none; }
+  .cloud{ filter: none; }
+}

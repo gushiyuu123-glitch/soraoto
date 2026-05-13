@@ -225,3 +225,8 @@ a{ color: inherit; }
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--ink), 0.22) transparent;
 }
+/* iOS含め、横方向だけ静かにクリップ */
+html, body { overflow-x: clip; }
+@supports not (overflow: clip){
+  html, body { overflow-x: hidden; } /* 古い環境の保険 */
+}

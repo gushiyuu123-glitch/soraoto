@@ -1,0 +1,188 @@
+/* PeakSp.module.css — SORAOTO / SP only */
+
+.section{
+  position: relative;
+  background: rgb(var(--paper));
+  padding: 76px 0 86px;
+  isolation: isolate;
+}
+
+.inner{
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 0 18px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.visual{
+  margin: 0;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: visible;
+}
+
+.visualImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 72% 46%;
+  transform: scale(1.03);
+  filter: saturate(0.99) contrast(1.05);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 90% 88% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.92) 52%,
+    rgba(0,0,0,0.46) 78%,
+    transparent 94%
+  );
+  mask-image: radial-gradient(
+    ellipse 90% 88% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.92) 52%,
+    rgba(0,0,0,0.46) 78%,
+    transparent 94%
+  );
+}
+
+.visualVeil{
+  position: absolute;
+  inset: -10% -10% -10% -10%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(720px 420px at 18% 74%, rgba(var(--paper), .14), transparent 66%),
+    radial-gradient(860px 520px at 54% 26%, rgba(var(--paper), .06), transparent 62%);
+
+  filter: blur(0.10px);
+  opacity: 0.66;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 96% 90% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.55) 72%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 96% 90% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.55) 72%,
+    transparent 92%
+  );
+}
+
+/* copy */
+.copy{
+  position: relative;
+  isolation: isolate;
+}
+
+/* 薄い膜（箱禁止） */
+.copy::before{
+  content:"";
+  position:absolute;
+  inset: -14px -14px -12px -14px;
+  z-index: -1;
+  pointer-events: none;
+
+  background: radial-gradient(
+    ellipse 72% 86% at 18% 52%,
+    rgba(var(--paper), .88) 0%,
+    rgba(var(--paper), .58) 22%,
+    rgba(var(--paper), .18) 46%,
+    transparent 74%
+  );
+  filter: blur(0.10px);
+  opacity: 0.78;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 86% 90% at 26% 56%,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,.78) 56%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 86% 90% at 26% 56%,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,.78) 56%,
+    transparent 92%
+  );
+}
+
+/* 譜面署名（小さく） */
+.score{
+  position: absolute;
+  left: 0;
+  top: -10px;
+  width: clamp(190px, 58vw, 300px);
+  height: auto;
+
+  stroke: rgba(var(--ink), 0.16);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.20;
+
+  transform: rotate(-2.2deg);
+  filter: blur(0.12px);
+  pointer-events: none;
+}
+
+.noteFill{
+  fill: rgba(var(--ink), 0.18);
+  stroke: none;
+  opacity: 0.9;
+}
+
+.tie{
+  stroke: rgba(var(--ink), 0.12);
+  stroke-width: 1;
+  opacity: 0.65;
+}
+
+/* text */
+.kicker{
+  margin: 0 0 10px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.46);
+}
+
+.title{
+  margin: 0 0 14px;
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  line-height: 1.16;
+  color: rgba(var(--ink), 0.86);
+}
+
+.t1{
+  display:block;
+  font-size: clamp(26px, 7.4vw, 36px);
+  color: rgba(var(--ink), 0.84);
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.t2{
+  display:block;
+  margin-top: 10px;
+  font-size: clamp(15px, 4.8vw, 20px);
+  color: rgba(var(--ink), 0.62);
+  line-height: 1.48;
+}
+
+.lead{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 2.02;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.72);
+}

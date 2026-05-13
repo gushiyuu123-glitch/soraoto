@@ -1,0 +1,728 @@
+/* src/sections/Reserve.module.css
+   SORAOTO — Reserve
+   基軸：予約票 + 空気画像 + 譜面送信UI
+*/
+
+.section{
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+  padding: clamp(142px, 16vh, 248px) 0 clamp(132px, 15vh, 224px);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* 上下境界を溶かす */
+.section::before,
+.section::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  pointer-events:none;
+  z-index: -1;
+}
+
+.section::before{
+  top:-1px;
+  height: clamp(76px, 11vh, 132px);
+  background: linear-gradient(
+    to bottom,
+    rgba(247,251,255,0) 0%,
+    rgba(247,251,255,0.86) 56%,
+    rgba(247,251,255,1) 100%
+  );
+}
+
+.section::after{
+  bottom:-1px;
+  height: clamp(76px, 11vh, 132px);
+  background: linear-gradient(
+    to top,
+    rgba(247,251,255,0) 0%,
+    rgba(247,251,255,0.86) 56%,
+    rgba(247,251,255,1) 100%
+  );
+}
+
+.inner{
+  width: min(1280px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4.5vw, 82px);
+
+  display: grid;
+  grid-template-columns: 1px minmax(0, 420px) minmax(0, 1fr);
+  gap: clamp(44px, 5vw, 96px);
+  align-items: start;
+}
+
+.rail{
+  width: 1px;
+  height: clamp(720px, 78vh, 1040px);
+  margin-top: 10px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(var(--ink),0.10) 16%,
+    rgba(var(--ink),0.22) 52%,
+    rgba(var(--ink),0.08) 84%,
+    transparent 100%
+  );
+}
+
+.main{
+  position: relative;
+  isolation: isolate;
+}
+
+.kicker{
+  margin: 0 0 14px;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(var(--ink), 0.40);
+}
+
+.title{
+  margin: 0 0 18px;
+  font-family: var(--font-poem);
+  font-weight: 500;
+  letter-spacing: 0.004em;
+  line-height: 1.10;
+}
+
+.t1{
+  display:block;
+  font-size: clamp(28px, 3vw, 46px);
+  color: rgba(var(--ink), 0.72);
+  text-wrap: balance;
+}
+
+.t2{
+  display:block;
+  margin-top: 12px;
+  font-size: clamp(14px, 1.55vw, 20px);
+  line-height: 1.5;
+  color: rgba(var(--ink), 0.54);
+}
+
+.lead{
+  margin: 0;
+  max-width: 30em;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 2.02;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.64);
+}
+
+/* 左下の画像 */
+.roomVisual{
+  margin: clamp(34px, 4vh, 48px) 0 0;
+  position: relative;
+  width: min(100%, 360px);
+  aspect-ratio: 5 / 6;
+  overflow: visible;
+}
+
+.roomImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  display: block;
+  transform: scale(1.01);
+  filter: saturate(0.95) contrast(1.02) brightness(0.92);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 88% 84% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.94) 56%,
+    rgba(0,0,0,0.54) 80%,
+    transparent 96%
+  );
+  mask-image: radial-gradient(
+    ellipse 88% 84% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.94) 56%,
+    rgba(0,0,0,0.54) 80%,
+    transparent 96%
+  );
+}
+
+.roomVeil{
+  position: absolute;
+  inset: -8% -10% -8% -10%;
+  pointer-events: none;
+  opacity: 0.92;
+
+  background:
+    radial-gradient(700px 440px at 24% 22%, rgba(255,255,255,0.18), transparent 60%),
+    radial-gradient(620px 420px at 74% 76%, rgba(255,255,255,0.10), transparent 62%);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 94% 88% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.54) 72%,
+    transparent 92%
+  );
+  mask-image: radial-gradient(
+    ellipse 94% 88% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.54) 72%,
+    transparent 92%
+  );
+}
+
+.roomShade{
+  position: absolute;
+  inset: 0;
+  pointer-events:none;
+  opacity: 0.82;
+  background:
+    linear-gradient(to top, rgba(12,26,36,0.18), rgba(12,26,36,0.04) 28%, transparent 52%),
+    linear-gradient(to bottom, rgba(12,26,36,0.10), transparent 26%),
+    linear-gradient(to right, rgba(12,26,36,0.06), transparent 20%, transparent 80%, rgba(12,26,36,0.08));
+  -webkit-mask-image: radial-gradient(
+    ellipse 88% 84% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.9) 58%,
+    rgba(0,0,0,0.48) 80%,
+    transparent 96%
+  );
+  mask-image: radial-gradient(
+    ellipse 88% 84% at 50% 50%,
+    black 0%,
+    rgba(0,0,0,0.9) 58%,
+    rgba(0,0,0,0.48) 80%,
+    transparent 96%
+  );
+}
+
+.roomCaption{
+  margin: 14px 0 0 4px;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  line-height: 1.9;
+  letter-spacing: 0.04em;
+  color: rgba(var(--ink), 0.50);
+}
+
+.score{
+  margin-top: 30px;
+  width: clamp(240px, 28vw, 440px);
+  height: auto;
+  pointer-events:none;
+  stroke: rgba(var(--ink), 0.10);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.14;
+  transform: rotate(-2deg);
+  filter: blur(0.12px);
+}
+
+/* 右：予約票 */
+.slip{
+  position: relative;
+  isolation: isolate;
+}
+
+.slip::before{
+  content:"";
+  position:absolute;
+  inset: -18px -18px -18px -18px;
+  z-index: -2;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      ellipse 74% 90% at 18% 18%,
+      rgba(255,255,255,0.72) 0%,
+      rgba(255,255,255,0.38) 26%,
+      rgba(255,255,255,0.14) 50%,
+      rgba(255,255,255,0.06) 66%,
+      transparent 80%
+    );
+  filter: blur(0.18px);
+  opacity: 0.96;
+}
+
+.slipInner{
+  padding-top: 6px;
+}
+
+.slipHead{
+  display:flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(var(--ink), 0.12);
+  margin-bottom: 16px;
+}
+
+.slipTitle{
+  margin: 0;
+  font-family: var(--font-poem);
+  font-size: 18px;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.72);
+}
+
+.slipMeta{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(var(--ink), 0.46);
+  text-transform: uppercase;
+}
+
+.grid{
+  display: grid;
+  gap: 14px;
+}
+
+.field{
+  display: grid;
+  gap: 8px;
+}
+
+.label{
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(var(--ink), 0.46);
+  text-transform: uppercase;
+}
+
+.input,
+.select{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--ink), 0.14);
+  background: rgba(255,255,255,0.72);
+  color: rgba(var(--ink), 0.78);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color .25s ease, background .25s ease;
+}
+
+.input:focus,
+.select:focus{
+  border-color: rgba(var(--ink), 0.28);
+  background: rgba(255,255,255,0.84);
+}
+
+.slots{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.slot{
+  appearance: none;
+  border: 1px solid rgba(var(--ink), 0.14);
+  background: rgba(255,255,255,0.58);
+  color: rgba(var(--ink), 0.62);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  padding: 10px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background .25s ease,
+    color .25s ease;
+}
+
+.slot:hover{
+  transform: translateY(-1px);
+  border-color: rgba(var(--ink), 0.24);
+}
+
+.slotOn{
+  background: rgba(255,255,255,0.86);
+  border-color: rgba(var(--ink), 0.28);
+  color: rgba(var(--ink), 0.78);
+}
+
+.slotFree{
+  margin-top: 8px;
+}
+
+.tear{
+  margin: 18px 0 14px;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(var(--ink),0.14) 0 8px,
+    transparent 8px 14px
+  );
+  opacity: 0.55;
+}
+
+.messageArea{
+  display: grid;
+  gap: 10px;
+}
+
+.msgTitle{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(var(--ink), 0.46);
+  text-transform: uppercase;
+}
+
+.textarea{
+  width: 100%;
+  min-height: 144px;
+  resize: vertical;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(var(--ink), 0.12);
+  background: rgba(255,255,255,0.66);
+  color: rgba(var(--ink), 0.72);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 1.85;
+}
+
+/* 送信UI */
+.actions{
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 2px;
+  min-height: 64px;
+}
+
+.sendStaff{
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  top: -8px;
+  height: 90px;
+  width: calc(100% + 16px);
+  pointer-events: none;
+  z-index: -1;
+  stroke: rgba(var(--ink), 0.10);
+  stroke-width: 1;
+  fill: none;
+  opacity: 0.46;
+  filter: blur(0.10px);
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 70% at 38% 40%,
+    rgba(0,0,0,.70) 0%,
+    rgba(0,0,0,.18) 56%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 70% at 38% 40%,
+    rgba(0,0,0,.70) 0%,
+    rgba(0,0,0,.18) 56%,
+    transparent 100%
+  );
+}
+
+.sendNote{
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(8px) scale(0.92);
+}
+
+.noteHead{
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(var(--ink), 0.12);
+  box-shadow: 0 0 0 1px rgba(var(--ink), 0.07) inset;
+  filter: blur(0.06px);
+}
+
+.noteStem{
+  position: absolute;
+  left: 9px;
+  top: -14px;
+  width: 1px;
+  height: 18px;
+  background: rgba(var(--ink), 0.10);
+  transform: rotate(10deg);
+  transform-origin: bottom;
+  opacity: 0.85;
+}
+
+@supports (offset-path: path("M0 0 L1 1")){
+  .sendNote{
+    offset-path: path("M18 58 C120 30 220 82 320 52 S 440 30 520 48");
+    offset-rotate: 0deg;
+    offset-distance: 0%;
+  }
+}
+
+.actions[data-fly="1"] .sendNote{
+  opacity: 0.9;
+  animation: noteFly 920ms cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes noteFly{
+  0%{
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+    offset-distance: 0%;
+    filter: blur(0.08px);
+  }
+  18%{
+    opacity: 0.92;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+  100%{
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    offset-distance: 100%;
+    filter: blur(0.12px);
+  }
+}
+
+@supports not (offset-path: path("M0 0 L1 1")){
+  @keyframes noteFlyFallback{
+    0%{ opacity:0; transform: translate(0, 10px) scale(.94); }
+    18%{ opacity:.92; transform: translate(40px, 0) scale(1); }
+    55%{ opacity:.72; transform: translate(240px, -8px) scale(.99); }
+    100%{ opacity:0; transform: translate(520px, -14px) scale(.98); }
+  }
+
+  .actions[data-fly="1"] .sendNote{
+    animation: noteFlyFallback 920ms cubic-bezier(.22,1,.36,1) both;
+  }
+}
+
+.copy{
+  appearance: none;
+  border: 1px solid rgba(var(--ink), 0.18);
+  background: rgba(255,255,255,0.84);
+  color: rgba(var(--ink), 0.76);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  padding: 10px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform .25s ease, border-color .25s ease;
+}
+
+.copy:hover{
+  transform: translateY(-1px);
+  border-color: rgba(var(--ink), 0.28);
+}
+
+.send,
+.sendGhost{
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  color: rgba(var(--ink), 0.70);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.10em;
+
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--ink), 0.18);
+  transition:
+    color .35s ease,
+    border-bottom-color .35s ease,
+    transform .35s ease;
+}
+
+.send:hover{
+  color: rgba(var(--ink), 0.86);
+  border-bottom-color: rgba(var(--ink), 0.42);
+  transform: translateY(-1px);
+}
+
+.sendGhost{
+  color: rgba(var(--ink), 0.54);
+  border-bottom-color: rgba(var(--ink), 0.12);
+}
+
+.sendGhost:hover{
+  color: rgba(var(--ink), 0.72);
+  border-bottom-color: rgba(var(--ink), 0.28);
+  transform: translateY(-1px);
+}
+
+.arrow{
+  display:inline-block;
+  transition: transform .35s ease;
+}
+
+.send:hover .arrow,
+.sendGhost:hover .arrow{
+  transform: translateX(6px);
+}
+
+.note{
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.46);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sendStaff{
+    opacity: 0.28;
+  }
+
+  .actions[data-fly="1"] .sendNote{
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 767px){
+  .section{
+    padding: clamp(108px, 13vh, 180px) 0 clamp(102px, 12vh, 168px);
+  }
+
+  .inner{
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .rail{
+    display: none;
+  }
+
+  .roomVisual{
+    width: min(100%, 100%);
+    aspect-ratio: 16 / 11;
+    margin-top: 28px;
+  }
+
+  .roomCaption{
+    margin-left: 0;
+  }
+
+  .score{
+    width: clamp(220px, 64vw, 340px);
+  }
+}
+/* 1ボタン送信（既存デザインのまま“少しだけボタン”） */
+.sendOne{
+  position: relative;
+  isolation: isolate;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  width: min(340px, 100%);
+  min-height: 54px;
+  padding: 0 18px;
+  margin: 0 auto;
+
+  border-radius: 16px;
+  border: 1px solid rgba(var(--ink), 0.14);
+  background: rgba(255,255,255,0.54);
+
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  color: rgba(var(--ink), 0.78);
+
+  cursor: pointer;
+  transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s ease, color .35s ease;
+}
+
+.sendOne::before{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  z-index:-1;
+  pointer-events:none;
+  background: radial-gradient(
+    ellipse 76% 88% at 50% 50%,
+    rgba(var(--paper), 0.82) 0%,
+    rgba(var(--paper), 0.46) 28%,
+    rgba(var(--paper), 0.18) 52%,
+    transparent 76%
+  );
+  filter: blur(0.12px);
+  opacity: 0.62;
+}
+
+.sendOne:hover{
+  transform: translateY(-1px);
+  border-color: rgba(var(--ink), 0.24);
+  color: rgba(var(--ink), 0.90);
+}
+
+.sendOne:disabled{
+  cursor: progress;
+  opacity: 0.74;
+}
+
+.sendOne[data-disabled="1"]{
+  opacity: 0.56;
+}
+.sendOne[data-disabled="1"]:hover{
+  transform: none;
+  border-color: rgba(var(--ink), 0.14);
+  color: rgba(var(--ink), 0.78);
+}
+
+/* 送信結果メッセージ */
+.sendMsg{
+  margin: 8px 0 0;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.52);
+}
+
+.sendMsg[data-kind="error"]{ color: rgba(var(--ink), 0.62); }
+.sendMsg[data-kind="failover"]{ color: rgba(var(--ink), 0.58); }
+.sendMsg[data-kind="sent"]{ color: rgba(var(--ink), 0.52); }
+
+/* failover mailto（普段は出ない） */
+.failover{
+  color: rgba(var(--ink), 0.70);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--ink), 0.18);
+  padding-bottom: 2px;
+}
+.failover:hover{
+  color: rgba(var(--ink), 0.90);
+  border-bottom-color: rgba(var(--ink), 0.34);
+}
+/* ReserveSp.module.css に追加 */
+.section{
+  scroll-margin-top: calc(72px + env(safe-area-inset-top));
+}

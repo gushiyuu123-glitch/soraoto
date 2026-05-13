@@ -1,0 +1,299 @@
+/* HeaderSp.module.css — SORAOTO / SP */
+
+:root{
+  /* safe-areaをJSでも拾えるように（任意） */
+  --safe-top: env(safe-area-inset-top);
+}
+
+.header{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  pointer-events: none;
+  isolation: isolate;
+
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity .55s ease,
+    transform .75s cubic-bezier(.22,1,.36,1);
+}
+
+.on{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* 膜（帯に見せない） */
+.header::before{
+  content:"";
+  position:absolute; inset: 0;
+  z-index: -1; pointer-events:none;
+
+  background:
+    radial-gradient(ellipse 60% 140% at 18% 0%,
+      rgba(var(--paper), 0.34) 0%,
+      rgba(var(--paper), 0.16) 38%,
+      transparent 76%
+    ),
+    radial-gradient(ellipse 60% 140% at 82% 0%,
+      rgba(var(--paper), 0.26) 0%,
+      rgba(var(--paper), 0.12) 40%,
+      transparent 78%
+    ),
+    url("/images/cloud.png");
+
+  background-repeat: no-repeat;
+  background-size: auto, auto, clamp(520px, 56vw, 980px);
+  background-position: 18% 0%, 82% 0%, 18% -22px;
+
+  opacity: .90;
+  filter: blur(0.22px);
+
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0) 88%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0) 88%);
+}
+
+.inner{
+  width: 100%;
+  margin: 0 auto;
+  padding:
+    max(env(safe-area-inset-top), 14px)
+    18px
+    12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.brand{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brandImg{
+  height: 20px;
+  width: auto;
+  opacity: 0.82;
+  filter: saturate(0.98) contrast(1.02);
+  transform: translateY(1px);
+}
+
+.brand::after{
+  content:"";
+  position:absolute;
+  left: 0; right: 0;
+  bottom: 6px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(var(--ink), 0.12) 38%,
+    rgba(var(--ink), 0.12) 62%,
+    transparent 100%
+  );
+  opacity: .38;
+}
+
+/* MENU（よくある三本線は捨てる） */
+.menuBtn{
+  position: absolute;
+  right: 14px;
+  top: calc(max(env(safe-area-inset-top), 14px) - 2px);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  border: 0;
+  background: transparent;
+  color: rgba(var(--ink), 0.66);
+  padding: 10px 10px;
+
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menuWord{ transform: translateY(-.5px); }
+
+/* “譜面記号”っぽいマーク（細線＋一点） */
+.menuMark{
+  width: 18px;
+  height: 10px;
+  position: relative;
+  opacity: .68;
+}
+.menuMark::before,
+.menuMark::after{
+  content:"";
+  position:absolute; left:0; right:0;
+  height: 1px;
+  background: rgba(var(--ink), 0.22);
+}
+.menuMark::before{ top: 1px; }
+.menuMark::after{ bottom: 1px; }
+.menuMark{
+  background:
+    radial-gradient(3px 3px at 78% 50%, rgba(var(--ink),0.32) 0%, transparent 70%);
+}
+
+/* overlay */
+.overlay{
+  position: fixed; inset: 0;
+  z-index: 18;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .45s ease;
+  background: rgba(var(--paper), 0.62);
+  -webkit-mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, black 0%, transparent 72%);
+  mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, black 0%, transparent 72%);
+}
+.overlayOn{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* sheet（上から静かに落ちる） */
+.sheet{
+  position: fixed;
+  left: 0; right: 0;
+  top: 0;
+
+  z-index: 19;
+  transform: translateY(-14px);
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    transform .55s cubic-bezier(.22,1,.36,1),
+    opacity .45s ease;
+
+  padding:
+    max(env(safe-area-inset-top), 18px)
+    18px
+    18px;
+
+  /* 譜面のうっすい線 */
+  background:
+    linear-gradient(to bottom, rgba(var(--paper),0.92), rgba(var(--paper),0.78)),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(var(--ink),0.05) 0 1px,
+      transparent 1px 14px
+    );
+  border-bottom: 1px solid rgba(var(--ink), 0.08);
+
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,.95) 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,.95) 72%, transparent 100%);
+}
+
+.sheetOn{
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheetTop{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sheetTitle{
+  font-family: var(--font-ital);
+  font-style: italic;
+  letter-spacing: 0.10em;
+  color: rgba(var(--ink), 0.70);
+}
+
+.closeBtn{
+  border: 0;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: rgba(var(--ink), 0.52);
+  padding: 10px 8px;
+}
+
+.nav{ }
+.list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item{ }
+
+.link{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+
+  text-decoration: none;
+  color: rgba(var(--ink), 0.74);
+
+  font-family: var(--font-ital);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+
+  padding: 10px 2px;
+  position: relative;
+}
+
+.link::after{
+  content:"";
+  position:absolute;
+  left: 0; right: 0;
+  bottom: 6px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(var(--ink),0.14) 40%,
+    rgba(var(--ink),0.14) 60%,
+    transparent 100%
+  );
+  opacity: .55;
+  transform: scaleX(.55);
+  transform-origin: left;
+  transition: opacity .35s ease, transform .35s ease;
+}
+
+.link:active{
+  color: rgba(var(--ink), 0.88);
+}
+.link:active::after{
+  opacity: .92;
+  transform: scaleX(1);
+}
+
+/* SR only */
+.srOnly{
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .header, .overlay, .sheet{ transition: none; }
+}
