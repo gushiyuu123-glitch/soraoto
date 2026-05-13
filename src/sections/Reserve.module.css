@@ -630,27 +630,95 @@
     width: clamp(220px, 64vw, 340px);
   }
 }
-/* CodaをReserve直前用に薄くする（被らせない） */
-.section::before{
-  opacity: 0.48; /* 終止線を弱める（また始まった感を消す） */
+/* 1ボタン送信（既存デザインのまま“少しだけボタン”） */
+.sendOne{
+  position: relative;
+  isolation: isolate;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  width: min(340px, 100%);
+  min-height: 54px;
+  padding: 0 18px;
+  margin: 0 auto;
+
+  border-radius: 16px;
+  border: 1px solid rgba(var(--ink), 0.14);
+  background: rgba(255,255,255,0.54);
+
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  color: rgba(var(--ink), 0.78);
+
+  cursor: pointer;
+  transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s ease, color .35s ease;
 }
 
-/* Codaは“動かさない”：Revealをフェードのみへ */
-.section :global(.reveal){
-  --ry: 0px;
-  --s0: 1;
-  --dur: 560ms;
-  --ease: cubic-bezier(.22,1,.36,1);
+.sendOne::before{
+  content:"";
+  position:absolute;
+  inset:-8px;
+  z-index:-1;
+  pointer-events:none;
+  background: radial-gradient(
+    ellipse 76% 88% at 50% 50%,
+    rgba(var(--paper), 0.82) 0%,
+    rgba(var(--paper), 0.46) 28%,
+    rgba(var(--paper), 0.18) 52%,
+    transparent 76%
+  );
+  filter: blur(0.12px);
+  opacity: 0.62;
 }
 
-/* railも短く薄く */
-.rail{
-  height: clamp(88px, 12vh, 160px);
-  opacity: 0.70;
+.sendOne:hover{
+  transform: translateY(-1px);
+  border-color: rgba(var(--ink), 0.24);
+  color: rgba(var(--ink), 0.90);
 }
 
-/* 署名（line）はさらに薄く or 使うなら小さく */
-.line{
-  width: clamp(200px, 22vw, 360px);
-  opacity: 0.14;
+.sendOne:disabled{
+  cursor: progress;
+  opacity: 0.74;
+}
+
+.sendOne[data-disabled="1"]{
+  opacity: 0.56;
+}
+.sendOne[data-disabled="1"]:hover{
+  transform: none;
+  border-color: rgba(var(--ink), 0.14);
+  color: rgba(var(--ink), 0.78);
+}
+
+/* 送信結果メッセージ */
+.sendMsg{
+  margin: 8px 0 0;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  color: rgba(var(--ink), 0.52);
+}
+
+.sendMsg[data-kind="error"]{ color: rgba(var(--ink), 0.62); }
+.sendMsg[data-kind="failover"]{ color: rgba(var(--ink), 0.58); }
+.sendMsg[data-kind="sent"]{ color: rgba(var(--ink), 0.52); }
+
+/* failover mailto（普段は出ない） */
+.failover{
+  color: rgba(var(--ink), 0.70);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--ink), 0.18);
+  padding-bottom: 2px;
+}
+.failover:hover{
+  color: rgba(var(--ink), 0.90);
+  border-bottom-color: rgba(var(--ink), 0.34);
 }
