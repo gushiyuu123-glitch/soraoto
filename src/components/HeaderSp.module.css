@@ -1,7 +1,6 @@
-/* HeaderSp.module.css — SORAOTO / SP */
+/* HeaderSp.module.css — SORAOTO / SP only */
 
 :root{
-  /* safe-areaをJSでも拾えるように（任意） */
   --safe-top: env(safe-area-inset-top);
 }
 
@@ -9,6 +8,7 @@
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 20;
+
   pointer-events: none;
   isolation: isolate;
 
@@ -28,8 +28,10 @@
 /* 膜（帯に見せない） */
 .header::before{
   content:"";
-  position:absolute; inset: 0;
-  z-index: -1; pointer-events:none;
+  position:absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events:none;
 
   background:
     radial-gradient(ellipse 60% 140% at 18% 0%,
@@ -66,14 +68,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
   position: relative;
+
+  /* ✅ iOSの判定ズレ潰し：内側は常に拾う */
+  pointer-events: auto;
 }
 
 .brand{
   position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   text-decoration: none;
+  pointer-events: auto;
 }
 
 .brandImg{
@@ -105,6 +113,10 @@
   right: 14px;
   top: calc(max(env(safe-area-inset-top), 14px) - 2px);
 
+  z-index: 5;
+  pointer-events: auto;
+  touch-action: manipulation;
+
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -131,29 +143,32 @@
   height: 10px;
   position: relative;
   opacity: .68;
+  background:
+    radial-gradient(3px 3px at 78% 50%, rgba(var(--ink),0.32) 0%, transparent 70%);
 }
 .menuMark::before,
 .menuMark::after{
   content:"";
-  position:absolute; left:0; right:0;
+  position:absolute;
+  left:0; right:0;
   height: 1px;
   background: rgba(var(--ink), 0.22);
 }
 .menuMark::before{ top: 1px; }
 .menuMark::after{ bottom: 1px; }
-.menuMark{
-  background:
-    radial-gradient(3px 3px at 78% 50%, rgba(var(--ink),0.32) 0%, transparent 70%);
-}
 
 /* overlay */
 .overlay{
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   z-index: 18;
+
   pointer-events: none;
   opacity: 0;
   transition: opacity .45s ease;
+
   background: rgba(var(--paper), 0.62);
+
   -webkit-mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, black 0%, transparent 72%);
   mask-image: radial-gradient(ellipse 120% 90% at 50% 0%, black 0%, transparent 72%);
 }
@@ -167,8 +182,8 @@
   position: fixed;
   left: 0; right: 0;
   top: 0;
-
   z-index: 19;
+
   transform: translateY(-14px);
   opacity: 0;
   pointer-events: none;
@@ -182,7 +197,6 @@
     18px
     18px;
 
-  /* 譜面のうっすい線 */
   background:
     linear-gradient(to bottom, rgba(var(--paper),0.92), rgba(var(--paper),0.78)),
     repeating-linear-gradient(
@@ -190,6 +204,7 @@
       rgba(var(--ink),0.05) 0 1px,
       transparent 1px 14px
     );
+
   border-bottom: 1px solid rgba(var(--ink), 0.08);
 
   -webkit-mask-image: linear-gradient(to bottom, black 0%, rgba(0,0,0,.95) 72%, transparent 100%);
@@ -226,18 +241,14 @@
   padding: 10px 8px;
 }
 
-.nav{ }
 .list{
   list-style: none;
   margin: 0;
   padding: 0;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-
-.item{ }
 
 .link{
   display: inline-flex;
@@ -296,4 +307,24 @@
 
 @media (prefers-reduced-motion: reduce){
   .header, .overlay, .sheet{ transition: none; }
+  .link::after{ transition: none; }
+}
+/* sheet：中身をもっと下げる */
+.sheet{
+  --sheetPadExtra: 42px; /* ★ ここが本体：42〜58pxで調整 */
+
+  padding-top: calc(max(env(safe-area-inset-top), 18px) + var(--sheetPadExtra));
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-bottom: 18px;
+}
+
+/* タイトル行も少し下げて“間”を作る */
+.sheetTop{
+  margin-bottom: 22px; /* 14px → 22px */
+}
+
+/* さらに下げたいなら：リスト開始位置だけ落とす（最後の手段） */
+.list{
+  padding-top: 6px;
 }

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import styles from "./HeaderSp.module.css";
 
 const DEFAULT_ITEMS = [
-  { href: "#about-sp",  label: "ABOUT"  },
+  { href: "#about-sp", label: "ABOUT" },
   { href: "#lesson-sp", label: "LESSON" },
-  { href: "#price-sp",  label: "PRICE"  },
+  { href: "#price-sp", label: "PRICE" },
   { href: "#voices-sp", label: "VOICES" },
 ];
 
@@ -12,11 +12,8 @@ const TOP = "#top-sp";
 
 export default function HeaderSp({ show = false, items = DEFAULT_ITEMS }) {
   const [open, setOpen] = useState(false);
-
-  // Headerが消えるならメニューも閉じる（事故防止）
-  useEffect(() => {
-    if (!show) setOpen(false);
-  }, [show]);
+  const lockYRef = useRef(0);
+  const closeBtnRef = useRef(null);
 
   // ESCで閉じる
   useEffect(() => {
@@ -28,13 +25,45 @@ export default function HeaderSp({ show = false, items = DEFAULT_ITEMS }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  // 開いてる間だけスクロールを止める（縦だけ）
+  // ✅ iOSでも飛ばないスクロールロック（overflow:hidden単体は禁止）
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    const body = document.body;
+    const html = document.documentElement;
+
+    const y = window.scrollY || window.pageYOffset || 0;
+    lockYRef.current = y;
+
+    const prevBody = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+    };
+    const prevHtmlOverflow = html.style.overflow;
+
+    html.style.overflow = "hidden";   // バウンス抑え
+    body.style.position = "fixed";    // 位置固定
+    body.style.top = `-${y}px`;       // 現在位置を保持
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
+    // 開いたら close にフォーカス（キーボード事故防止）
+    requestAnimationFrame(() => closeBtnRef.current?.focus());
+
     return () => {
-      document.body.style.overflow = prev;
+      html.style.overflow = prevHtmlOverflow;
+
+      body.style.position = prevBody.position;
+      body.style.top = prevBody.top;
+      body.style.left = prevBody.left;
+      body.style.right = prevBody.right;
+      body.style.width = prevBody.width;
+
+      window.scrollTo({ top: lockYRef.current, left: 0, behavior: "auto" });
     };
   }, [open]);
 
@@ -42,28 +71,45 @@ export default function HeaderSp({ show = false, items = DEFAULT_ITEMS }) {
     const el = document.querySelector(hash);
     if (!el) return;
 
-    // fixed header + safe-area ぶんだけ上に余白を取る
-    const safeTop = parseFloat(getComputedStyle(document.documentElement)
-      .getPropertyValue("--safe-top") || "0");
-    const headerOffset = 64 + safeTop; // ここは好みで微調整
-    const y = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    const safeTop = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue("--safe-top") || "0"
+    );
+    const headerOffset = 64 + safeTop; // 好みで微調整
 
+    const y = el.getBoundingClientRect().top + window.scrollY - headerOffset;
     window.scrollTo({ top: y, behavior: "smooth" });
   }, []);
 
-  const onLink = useCallback((e, href) => {
-    if (!href?.startsWith("#")) return;
+  const onLink = useCallback(
+    (e, href) => {
+      if (!href?.startsWith("#")) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const wasOpen = open;
+      setOpen(false);
+
+      // 閉じの開始を1〜2フレーム待ってからスクロール（気持ちよさ）
+      const go = () => scrollToId(href);
+      if (wasOpen) requestAnimationFrame(() => requestAnimationFrame(go));
+      else requestAnimationFrame(go);
+    },
+    [open, scrollToId]
+  );
+
+  const toggle = useCallback((e) => {
     e.preventDefault();
-    setOpen(false);
-    // 閉じるアニメが気持ちいいように、1フレームだけ待つ
-    requestAnimationFrame(() => scrollToId(href));
-  }, [scrollToId]);
+    e.stopPropagation();
+    setOpen((v) => !v);
+  }, []);
+
+  const close = useCallback(() => setOpen(false), []);
 
   return (
     <>
       <header className={`${styles.header} ${show ? styles.on : ""}`}>
         <div className={styles.inner}>
-          <a className={styles.brand} href={TOP} aria-label="SORAOTO" onClick={(e)=>onLink(e, TOP)}>
+          <a className={styles.brand} href={TOP} aria-label="SORAOTO" onClick={(e) => onLink(e, TOP)}>
             <img
               className={styles.brandImg}
               src="/images/soraoto-logo.png"
@@ -81,7 +127,7 @@ export default function HeaderSp({ show = false, items = DEFAULT_ITEMS }) {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             aria-controls="sp-menu"
-            onClick={() => setOpen((v) => !v)}
+            onClick={toggle}
           >
             <span className={styles.menuWord}>MENU</span>
             <span className={styles.menuMark} aria-hidden="true" />
@@ -89,14 +135,30 @@ export default function HeaderSp({ show = false, items = DEFAULT_ITEMS }) {
         </div>
       </header>
 
-      {/* overlay */}
-      <div className={`${styles.overlay} ${open ? styles.overlayOn : ""}`} onClick={() => setOpen(false)} />
+      {/* overlay（クリックで閉じる） */}
+      <div
+        className={`${styles.overlay} ${open ? styles.overlayOn : ""}`}
+        aria-hidden={!open}
+        onClick={close}
+      />
 
       {/* sheet */}
-      <aside id="sp-menu" className={`${styles.sheet} ${open ? styles.sheetOn : ""}`} aria-hidden={!open}>
+      <aside
+        id="sp-menu"
+        className={`${styles.sheet} ${open ? styles.sheetOn : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!open}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className={styles.sheetTop}>
-          <div className={styles.sheetTitle}>SORAOTO</div>
-          <button type="button" className={styles.closeBtn} onClick={() => setOpen(false)}>
+          <div className={styles.sheetTitle}></div>
+          <button
+            ref={closeBtnRef}
+            type="button"
+            className={styles.closeBtn}
+            onClick={close}
+          >
             CLOSE
           </button>
         </div>
@@ -105,7 +167,7 @@ export default function HeaderSp({ show = false, items = DEFAULT_ITEMS }) {
           <ul className={styles.list}>
             {items.map((it) => (
               <li key={it.href} className={styles.item}>
-                <a className={styles.link} href={it.href} onClick={(e)=>onLink(e, it.href)}>
+                <a className={styles.link} href={it.href} onClick={(e) => onLink(e, it.href)}>
                   {it.label}
                 </a>
               </li>
