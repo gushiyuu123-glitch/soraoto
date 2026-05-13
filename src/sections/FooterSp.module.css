@@ -9,10 +9,14 @@
   --bgOpacity: 0.20;
   --bgBlur: 0.10px;
   --bgMix: soft-light;
+  /* ✅ SP余白を再定義（iPhone SEでも“章”にならない） */
+  --padT: clamp(72px, 10vh, 104px);
+  --padB: clamp(56px, 8vh, 88px);
 
   --bgPosX: 52%;
   --bgPosY: 44%;
 
+  padding: var(--padT) 0 var(--padB);
   position: relative;
   background: rgb(var(--paper));
   margin-top: 0;
@@ -64,7 +68,7 @@
   position:absolute;
   left:0; right:0;
   top:-1px;
-  height: clamp(64px, 10vh, 112px);
+height: clamp(42px, 7vh, 76px);
   pointer-events:none;
   z-index: 1;
 
