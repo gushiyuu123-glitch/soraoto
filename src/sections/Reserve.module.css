@@ -630,3 +630,27 @@
     width: clamp(220px, 64vw, 340px);
   }
 }
+/* CodaをReserve直前用に薄くする（被らせない） */
+.section::before{
+  opacity: 0.48; /* 終止線を弱める（また始まった感を消す） */
+}
+
+/* Codaは“動かさない”：Revealをフェードのみへ */
+.section :global(.reveal){
+  --ry: 0px;
+  --s0: 1;
+  --dur: 560ms;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+
+/* railも短く薄く */
+.rail{
+  height: clamp(88px, 12vh, 160px);
+  opacity: 0.70;
+}
+
+/* 署名（line）はさらに薄く or 使うなら小さく */
+.line{
+  width: clamp(200px, 22vw, 360px);
+  opacity: 0.14;
+}

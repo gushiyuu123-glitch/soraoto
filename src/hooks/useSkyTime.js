@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 
-/* 時刻 → 空気色（SORAOTOのOS） */
 function getSkyPaletteByHour(h) {
   if (h >= 0 && h < 5)  return { r: 18,  g: 20,  b: 52,  op: 0.58 };
   if (h < 7)           return { r: 228, g: 118, b: 68,  op: 0.22 };
@@ -13,7 +12,6 @@ function getSkyPaletteByHour(h) {
 
 const pad2 = (n) => String(n).padStart(2, "0");
 
-/* 分単位で更新（“時計感”を出さない） */
 export function useSkyTime() {
   const [now, setNow] = useState(() => new Date());
 
@@ -21,13 +19,20 @@ export function useSkyTime() {
     let timeoutId = 0;
     let intervalId = 0;
 
+    const clear = () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      if (intervalId) window.clearInterval(intervalId);
+      timeoutId = 0;
+      intervalId = 0;
+    };
+
     const tick = () => setNow(new Date());
 
-    // 次の「分の境界」に合わせて更新 → 以降は1分ごと
     const schedule = () => {
+      clear();
+
       const d = new Date();
-      const msToNextMinute =
-        (60 - d.getSeconds()) * 1000 - d.getMilliseconds();
+      const msToNextMinute = (60 - d.getSeconds()) * 1000 - d.getMilliseconds();
 
       timeoutId = window.setTimeout(() => {
         tick();
@@ -37,9 +42,19 @@ export function useSkyTime() {
 
     schedule();
 
+    // ✅ タブ復帰/スリープ復帰で分境界に再同期
+    const onVis = () => {
+      if (document.visibilityState === "visible") schedule();
+      else clear();
+    };
+
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("pageshow", schedule); // bfcache対策
+
     return () => {
-      if (timeoutId) window.clearTimeout(timeoutId);
-      if (intervalId) window.clearInterval(intervalId);
+      clear();
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pageshow", schedule);
     };
   }, []);
 
@@ -49,10 +64,7 @@ export function useSkyTime() {
     return `${h}:${m}`;
   }, [now]);
 
-  const palette = useMemo(
-    () => getSkyPaletteByHour(now.getHours()),
-    [now]
-  );
+  const palette = useMemo(() => getSkyPaletteByHour(now.getHours()), [now]);
 
   return { clock, palette };
 }

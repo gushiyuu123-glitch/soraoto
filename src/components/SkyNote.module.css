@@ -1,44 +1,58 @@
+/* SkyNote.module.css — SORAOTO
+   役割：空のOSに一瞬だけ“音符の気配”を混ぜる（勝たない）
+*/
+
 @keyframes noteBreath{
-  0%   { opacity: 0;   transform: translate3d(var(--sx), var(--sy), 0) rotate(-2deg) scale(0.96); }
-  18%  { opacity: .08; }
-  70%  { opacity: .06; transform: translate3d(var(--mx), var(--my), 0) rotate(2deg)  scale(1.00); }
-  100% { opacity: 0;   transform: translate3d(var(--ex), var(--ey), 0) rotate(6deg)  scale(1.03); }
+  0%   { opacity: 0;   transform: translate3d(var(--sx), var(--sy), 0) rotate(-1.6deg) scale(0.985); }
+  18%  { opacity: .055; }
+  70%  { opacity: .042; transform: translate3d(var(--mx), var(--my), 0) rotate(1.8deg)  scale(1.00); }
+  100% { opacity: 0;   transform: translate3d(var(--ex), var(--ey), 0) rotate(4.2deg)  scale(1.02); }
 }
 
 .wrap{
   position: fixed;
-  top: clamp(18px, 2.4vw, 34px);
+  top: calc(clamp(18px, 2.4vw, 34px) + env(safe-area-inset-top));
   right: clamp(22px, 3.2vw, 54px);
-  z-index: 999; /* もう箱に負けない */
+  z-index: 9;              /* Header(10)より下に置く */
   pointer-events: none;
   isolation: isolate;
 
-  /* ▼ 位置探し：ここだけいじる（左へ = マイナス / 下へ = プラス） */
+  /* 位置調整：ここだけ */
   --ox: 0px;
   --oy: 0px;
   transform: translate3d(var(--ox), var(--oy), 0);
 
-  /* 軌道（そのまま） */
-  --sx:  10px;  --sy:  10px;
-  --mx: -6px;   --my: -14px;
-  --ex: -18px;  --ey: -44px;
+  /* 軌道：小さく上品に */
+  --sx:  8px;  --sy:  10px;
+  --mx: -5px;  --my: -12px;
+  --ex: -14px; --ey: -34px;
 }
+
 .note{
-  width: clamp(84px, 9vw, 128px);
+  width: clamp(78px, 8.5vw, 118px);
   height: auto;
 
-  color: rgba(12,26,36,0.9);
-  filter: blur(0.2px);
+  /* 濃すぎ禁止：紙に沈むインク */
+  color: rgba(var(--ink), 0.78);
 
-  /* これが“見える根” */
+  /* 霧にしない（輪郭だけ整える） */
+  filter: blur(0.10px);
+
+  /* “紙に乗る” */
   mix-blend-mode: multiply;
 
   will-change: transform, opacity;
-  animation: noteBreath 3.0s cubic-bezier(.22,1,.36,1) both;
+  animation: noteBreath 2.85s cubic-bezier(.22,1,.36,1) both;
 }
 
+/* 端末負荷・動き抑制 */
 @media (prefers-reduced-motion: reduce){
-  .note{ animation: none; opacity: .04; transform: none; }
+  .note{
+    animation: none;
+    opacity: .028;   /* “居る”だけ */
+    transform: none;
+    filter: none;
+  }
 }
 
 @media (max-width: 767px){

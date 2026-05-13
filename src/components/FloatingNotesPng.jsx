@@ -84,8 +84,8 @@ export default function FloatingNotesPng({ show = true, debug = false }) {
       if (!mounted) return;
 
       setItems((prev) => {
-        // ✅ 同時表示：少し増やす
-        const maxLive = debug ? 14 : 9;
+        // ✅ 同時表示：落ち着かせる
+        const maxLive = debug ? 12 : 6;
         if (prev.length >= maxLive) return prev;
 
         const a = pickAnchorWeighted();
@@ -96,32 +96,36 @@ export default function FloatingNotesPng({ show = true, debug = false }) {
         const startX = clamp(a.x + rand(-6.0, 6.0), 8, 92);
         const startY = clamp(a.y + rand(-6.0, 6.0), 10, 90);
 
-        const duration = rand(7200, 10800);
-        const delay = rand(0, 520);
+        // ✅ duration：少し長くして“急かし”を消す（同時数はmaxLiveで制御）
+        const duration = rand(8800, 13200);
+        const delay = rand(0, 620);
 
-        const rise = rand(34, 72);
-        const driftX = rand(-26, 26);
+        // ✅ 動き：レンジを狭める（小刻みなノイズを減らす）
+        const rise = rand(26, 58);
+        const driftX = rand(-18, 18);
 
         // 中間点用（calcで掛け算しない）
         const dxm = driftX * 0.42;
         const dy = -rise;
         const dym = dy * 0.42;
 
-        const rot0 = rand(-16, 10);
-        const rot1 = rot0 + rand(-10, 14);
+        // ✅ 回転：揺れ幅を減らす
+        const rot0 = rand(-10, 8);
+        const rot1 = rot0 + rand(-6, 10);
 
-        const s0 = rand(0.92, 1.08);
-        const s1 = s0 + rand(0.04, 0.14);
+        // ✅ スケール：変化量を小さく
+        const s0 = rand(0.96, 1.04);
+        const s1 = s0 + rand(0.03, 0.1);
 
-        // ✅ 見えるが演出感を抑える（gainで最終調整）
-        const peak = rand(0.18, 0.32);
+        // ✅ 濃さ：ピークを落とす（落ち着く）
+        const peak = rand(0.12, 0.22);
 
-  // 端末でレンジを分ける（品が残る）
-const isCoarse =
-  typeof window !== "undefined" &&
-  window.matchMedia?.("(pointer: coarse)")?.matches;
+        // 端末でレンジを分ける（品が残る）
+        const isCoarse =
+          typeof window !== "undefined" &&
+          window.matchMedia?.("(pointer: coarse)")?.matches;
 
-const size = isCoarse ? rand(38, 58) : rand(42, 66);
+        const size = isCoarse ? rand(34, 52) : rand(38, 60);
 
         const it = {
           id,
@@ -148,30 +152,29 @@ const size = isCoarse ? rand(38, 58) : rand(42, 66);
         }, duration + delay + 260);
 
         timersRef.current.add(kill);
-
         return [...prev, it];
       });
     };
 
-    // ✅ 初動：2発だけ置いて「出てない」を防ぐ（ループは別）
+    // ✅ 初動：2発だけ置くが、2発目を少し遅らせて圧を減らす
     const boot = window.setTimeout(() => {
       spawnOne();
-      window.setTimeout(spawnOne, 520);
-    }, debug ? 120 : 520);
+      window.setTimeout(spawnOne, 900);
+    }, debug ? 120 : 760);
     timersRef.current.add(boot);
 
-    // ✅ ループ：出現頻度を“少し”上げる
+    // ✅ ループ：出現頻度を下げて落ち着かせる
     const loop = () => {
       if (!mounted) return;
 
       spawnOne();
 
-      const next = debug ? rand(650, 950) : rand(1500, 2800);
+      const next = debug ? rand(850, 1200) : rand(2400, 4200);
       const t = window.setTimeout(loop, next);
       timersRef.current.add(t);
     };
 
-    const starter = window.setTimeout(loop, debug ? 240 : 1200);
+    const starter = window.setTimeout(loop, debug ? 240 : 1400);
     timersRef.current.add(starter);
 
     return () => {
@@ -206,7 +209,13 @@ const size = isCoarse ? rand(38, 58) : rand(42, 66);
             "--peak": it.peak,
           }}
         >
-          <img className={styles.img} src={it.src} alt="" draggable="false" decoding="async" />
+          <img
+            className={styles.img}
+            src={it.src}
+            alt=""
+            draggable="false"
+            decoding="async"
+          />
         </div>
       ))}
     </div>

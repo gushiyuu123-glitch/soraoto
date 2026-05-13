@@ -1,11 +1,21 @@
 import styles from "./Header.module.css";
 
 const ITEMS = [
-  { href: "#about", label: "ABOUT" },
+  { href: "#about",  label: "ABOUT"  },
   { href: "#lesson", label: "LESSON" },
-  { href: "#reserve", label: "RESERVE" },
+  { href: "#price",  label: "PRICE"  },
+  { href: "#voices", label: "VOICES" },
 ];
-
+// 例：クリック時だけ
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("href");
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
 export default function Header({ show = false, items = ITEMS }) {
   return (
     <header className={`${styles.header} ${show ? styles.on : ""}`}>

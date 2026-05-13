@@ -342,3 +342,23 @@
   .lead{ margin-bottom: 20px; }
   .points{ gap: 14px; margin-bottom: 18px; }
 }
+/* 1) 本文を少しだけ右へ（SPは動かさない） */
+.main{
+  position: relative;
+  max-width: 760px;
+  isolation: isolate;
+  margin-left: 0; /* default */
+}
+
+@media (min-width: 768px){
+  .main{
+    margin-left: clamp(10px, 1.1vw, 22px);
+  }
+}
+
+/* 2) 上のセクションとの“間”をもう少し（デスクトップだけ） */
+@media (min-width: 768px){
+  .section{
+    padding-top: clamp(160px, 17.6vh, 260px);
+  }
+}

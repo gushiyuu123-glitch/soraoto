@@ -16,7 +16,7 @@ import Price from "../sections/Price";
 import Voices from "../sections/Voices";
 import Reserve from "../sections/Reserve";
 import Footer from "../sections/Footer";
-
+import Coda from "../sections/Coda";
 const FALLBACK_PALETTE = { r: 18, g: 20, b: 52, op: 0.52 };
 
 export default function Home() {
@@ -53,13 +53,14 @@ export default function Home() {
       <FloatingNotesPng show />
 
       <div className="stage">
-        <Hero clock={clock} palette={safePalette} />
+       <Hero clock={clock} heroOn={heroOn} />
         <Invitation />
         <Lesson />
         <Teacher />
         <Peak />
         <Price />
         <Voices />
+        <Coda />
         <Reserve />
         <Footer />
       </div>

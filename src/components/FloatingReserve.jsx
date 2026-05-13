@@ -3,7 +3,13 @@ import styles from "./FloatingReserve.module.css";
 export default function FloatingReserve({ show = true, href = "#reserve" }) {
   return (
     <div className={`${styles.wrap} ${show ? styles.on : ""}`} aria-hidden={!show}>
-      <a className={styles.cta} href={href} aria-label="体験レッスンを予約する">
+      <a
+        className={styles.cta}
+        href={href}
+        aria-label="体験レッスンを予約する"
+        tabIndex={show ? 0 : -1}
+        aria-hidden={!show}
+      >
         <img
           className={styles.cloud}
           src="/images/piano.png"

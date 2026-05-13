@@ -6,30 +6,14 @@ export default function Reveal({
   delay = 0,                 // ms
   threshold = 0.12,
   rootMargin = "0px 0px -10% 0px",
+  once = true,
+  style,
   children,
 }) {
   const ref = useRef(null);
   const ioRef = useRef(null);
   const [on, setOn] = useState(false);
-// Reserve.jsx の上の方に追加
-const [fly, setFly] = useState(false);
 
-const pulseFly = () => {
-  setFly(true);
-  window.setTimeout(() => setFly(false), 900);
-};
-
-const onSendLine = () => {
-  pulseFly();
-  if (LINE_URL && LINE_URL !== "#") {
-    window.open(LINE_URL, "_blank", "noopener,noreferrer");
-  }
-};
-
-const onSendMail = () => {
-  pulseFly();
-  window.location.href = mailto;
-};
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -40,30 +24,34 @@ const onSendMail = () => {
       return;
     }
 
-    ioRef.current = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue;
           setOn(true);
-          ioRef.current?.unobserve(e.target); // 1回だけで十分
+          if (once) io.unobserve(e.target);
         }
       },
       { threshold, rootMargin }
     );
 
-    ioRef.current.observe(el);
+    ioRef.current = io;
+    io.observe(el);
 
     return () => {
-      ioRef.current?.disconnect();
+      io.disconnect();
       ioRef.current = null;
     };
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, once]);
 
   return (
     <Tag
       ref={ref}
       className={`reveal ${on ? "on" : ""} ${className}`}
-      style={{ "--d": `${Math.max(0, Number(delay) || 0)}ms` }}
+      style={{
+        "--d": `${Math.max(0, Number(delay) || 0)}ms`,
+        ...style,
+      }}
     >
       {children}
     </Tag>

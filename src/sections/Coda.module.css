@@ -1,0 +1,167 @@
+/* src/sections/Coda.module.css — SORAOTO
+   Voicesのあとに置く“余熱”。短く、静かに、決断へ渡す。
+   目的：Voicesと文法を変えて、章の切り替えを作る（終止線 + 上落ちReveal）
+*/
+
+.section{
+  position: relative;
+  background: rgb(var(--paper));
+  margin-top: 0;
+  padding: clamp(70px, 9.6vh, 136px) 0 clamp(56px, 7.8vh, 118px);
+  isolation: isolate;
+}
+
+/* ✅ 章の切り替え：終止の薄い水平線（Voicesとの差） */
+.section::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  pointer-events:none;
+
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(var(--ink), 0.06) 18%,
+    rgba(var(--ink), 0.12) 52%,
+    rgba(var(--ink), 0.06) 82%,
+    transparent 100%
+  );
+  opacity: 0.72;
+}
+
+/* ✅ CodaだけRevealを“上から落ちる”にして差別化 */
+.section :global(.reveal){
+  --ry: -12px; /* 上から落ちる */
+  --s0: 1;
+  --dur: 640ms;
+  --ease: cubic-bezier(.16, 1, .30, 1);
+}
+
+.inner{
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4.5vw, 82px);
+
+  display: grid;
+  grid-template-columns: 1px minmax(0, 1fr);
+  gap: clamp(22px, 3.0vw, 54px);
+  align-items: start;
+}
+
+/* rail：Voicesより短く、“終止”の縦 */
+.rail{
+  width: 1px;
+  height: clamp(108px, 16vh, 200px);
+  margin-top: 10px;
+
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(var(--ink), 0.06) 18%,
+    rgba(var(--ink), 0.14) 58%,
+    rgba(var(--ink), 0.18) 86%,
+    transparent 100%
+  );
+  opacity: 0.92;
+}
+
+.main{
+  position: relative;
+  max-width: 46em;
+  padding-top: 2px;
+}
+
+/* ✅ 霧じゃなく“紙の深度”：極薄のインク洗い（安っぽさ回避） */
+.main::before{
+  content:"";
+  position:absolute;
+  inset: -10px -10px -12px -14px;
+  pointer-events:none;
+  z-index: -1;
+
+  background:
+    radial-gradient(
+      ellipse 72% 90% at 18% 38%,
+      rgba(var(--ink), 0.040) 0%,
+      transparent 62%
+    );
+  filter: blur(0.06px);
+  opacity: 0.85;
+}
+
+/* 1本線の譜面（気配だけ）：Voicesと違う“署名” */
+.line{
+  width: clamp(260px, 30vw, 460px);
+  height: auto;
+  display: block;
+  margin: 0 0 14px;
+
+  fill: none;
+  stroke: rgba(var(--ink), 0.14);
+  stroke-width: 1;
+  stroke-linecap: round;
+
+  opacity: 0.20;
+  filter: blur(0.06px);
+  transform: rotate(-1.0deg);
+  transform-origin: left center;
+
+  pointer-events: none;
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 78% 74% at 34% 54%,
+    rgba(0,0,0,0.70) 0%,
+    rgba(0,0,0,0.22) 62%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 78% 74% at 34% 54%,
+    rgba(0,0,0,0.70) 0%,
+    rgba(0,0,0,0.22) 62%,
+    transparent 100%
+  );
+}
+
+.text{
+  margin: 0;
+  font-family: var(--font-poem);
+  font-weight: 500;
+  font-size: clamp(17px, 1.55vw, 22px);
+  line-height: 1.76;
+  letter-spacing: 0.01em;
+  color: rgba(var(--ink), 0.82);
+}
+
+.sub{
+  margin: 10px 0 0;
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  line-height: 2.0;
+  letter-spacing: 0.03em;
+  color: rgba(var(--ink), 0.56);
+}
+
+/* SP：余熱は短く・安全に */
+@media (max-width: 767px){
+  .section{
+    padding: clamp(64px, 9.2vh, 116px) 0 clamp(50px, 7.2vh, 96px);
+  }
+
+  .inner{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .rail{ display:none; }
+
+  .main::before{
+    opacity: 0.72;
+  }
+
+  .line{
+    opacity: 0.16;
+    margin-bottom: 12px;
+  }
+}

@@ -1,15 +1,15 @@
-/* src/sections/Footer.module.css — SORAOTO
-   空気と音の終止。背景は“譜面の残像”として溶かす。
-*/
-
 .section{
-  /* 差し替え：Footer用の背景画像（譜面の残像） */
+  /* 背景画像（譜面の残像） */
   --footerBg: url("/images/soraoto-footer-score-mist.jpeg");
 
-  /* 調整つまみ */
-  --bgOpacity: 0.26;   /* 0.18〜0.34 */
-  --bgBlur: 0.14px;    /* 強いblur禁止 */
-  --bgMix: multiply;   /* soft-light にするとさらに柔らかい */
+  /* 調律つまみ */
+  --bgOpacity: 0.34;     /* 0.30〜0.40（“見える”側へ） */
+  --bgBlur: 0.10px;      /* 0.08〜0.12（霧にしない） */
+  --bgMix: soft-light;   /* multiplyより“出る”。強ければ multiplyへ戻す */
+
+  /* ✅ 切り出し位置を変えられるようにする */
+  --bgPosX: 52%;
+  --bgPosY: 44%;
 
   position: relative;
   background: rgb(var(--paper));
@@ -19,7 +19,7 @@
   overflow: hidden;
 }
 
-/* 背景：譜面の残像（上下はみ出し + 外周フェザー） */
+/* 背景：譜面の残像（“読める気配”を残して、壁紙化は殺す） */
 .section::after{
   content:"";
   position:absolute;
@@ -27,30 +27,35 @@
   z-index: -2;
   pointer-events:none;
 
-  background-image: var(--footerBg);
-  background-size: cover;
-  background-position: 56% 46%;
+  /* ✅ 1) 紙の洗い（霧じゃなく紙） 2) 譜面 */
+  background-image:
+    radial-gradient(110% 90% at 18% 26%, rgba(var(--paper), .26) 0%, transparent 60%),
+    radial-gradient(92% 74% at 64% 70%, rgba(var(--ink), .06) 0%, transparent 62%),
+    var(--footerBg);
+
+  background-size: cover, cover, cover;
+  background-position: center, center, var(--bgPosX) var(--bgPosY);
   background-repeat: no-repeat;
 
   opacity: var(--bgOpacity);
-  filter: blur(var(--bgBlur)) saturate(0.98) contrast(1.02);
+  filter: blur(var(--bgBlur)) saturate(0.99) contrast(1.06);
   mix-blend-mode: var(--bgMix);
 
-  /* 外周で自然に消す（壁紙化防止） */
+  /* ✅ フェザーを“ゆるめる”（今ここが弱さの主因） */
   -webkit-mask-image:
     radial-gradient(
-      ellipse 74% 64% at 52% 48%,
-      rgba(0,0,0,0.62) 0%,
-      rgba(0,0,0,0.92) 54%,
-      rgba(0,0,0,1) 76%,
+      ellipse 88% 76% at 52% 50%,
+      rgba(0,0,0,0.72) 0%,
+      rgba(0,0,0,0.98) 62%,
+      rgba(0,0,0,1) 78%,
       rgba(0,0,0,0.0) 100%
     );
   mask-image:
     radial-gradient(
-      ellipse 74% 64% at 52% 48%,
-      rgba(0,0,0,0.62) 0%,
-      rgba(0,0,0,0.92) 54%,
-      rgba(0,0,0,1) 76%,
+      ellipse 88% 76% at 52% 50%,
+      rgba(0,0,0,0.72) 0%,
+      rgba(0,0,0,0.98) 62%,
+      rgba(0,0,0,1) 78%,
       rgba(0,0,0,0.0) 100%
     );
 }
@@ -212,7 +217,8 @@
   display: grid;
   justify-items: end;
   gap: 12px;
-  padding-top: 10px;
+  padding-top: 0;
+    margin-top: clamp(74px, 10.8vh, 190px);
 }
 
 .navItem{
@@ -493,4 +499,55 @@
   .navItemWrap{
     justify-self: start;
   }
+}
+/* ── Wide stage (PC only) ─────────────────────────────── */
+@media (min-width: 1024px){
+  /* ステージを広げる */
+  .inner{
+    width: min(1480px, 100%);
+    padding: 0 clamp(28px, 4.8vw, 96px);
+
+    /* mainを太く、navをもっと右へ */
+    grid-template-columns: 1px minmax(0, 640px) minmax(0, 1fr);
+    gap: clamp(44px, 4.8vw, 112px);
+  }
+
+  /* 譜面は“横”が主役。少しだけはみ出して迫力 */
+  .staff{
+    width: clamp(440px, 50vw, 820px);
+    margin-left: clamp(-42px, -2.6vw, -18px);
+    opacity: 0.30; /* ほんの少しだけ上げて存在感を戻す */
+  }
+
+  /* dividerも横に伸ばして締めの終止線にする */
+  .divider{
+    width: calc(100% + clamp(40px, 6vw, 120px));
+    margin-left: calc(clamp(40px, 6vw, 120px) * -0.5);
+    opacity: 0.78;
+  }
+
+  /* navを“右端の縦帯”として成立させる */
+  .nav{
+    justify-items: end;
+    padding-right: clamp(0px, 0.8vw, 10px);
+  }
+}
+
+/* 超ワイドで間延びしない安全弁（密度を戻す） */
+@media (min-width: 1680px){
+  .inner{
+    padding: 0 clamp(44px, 5.2vw, 120px);
+  }
+}
+
+/* PCはさらに少し落として“締め”の重心を作る */
+@media (min-width: 1024px){
+  .nav{
+    margin-top: clamp(96px, 12vh, 230px);
+  }
+}
+
+/* SPは従来どおり（下げない） */
+@media (max-width: 767px){
+  .nav{ margin-top: 0; }
 }

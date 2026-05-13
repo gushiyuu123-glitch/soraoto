@@ -350,6 +350,7 @@
   );
 }
 
+/* 縦レール：ほんの少し薄く、上品に */
 .rail{
   grid-column: 1;
   width: 1px;
@@ -360,13 +361,14 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(12, 26, 36, 0.12) 16%,
-    rgba(12, 26, 36, 0.20) 52%,
-    rgba(12, 26, 36, 0.06) 80%,
+    rgba(12, 26, 36, 0.10) 16%,
+    rgba(12, 26, 36, 0.16) 52%,
+    rgba(12, 26, 36, 0.05) 80%,
     transparent 100%
   );
-}
 
+  opacity: 0.86; /* ← “ほんの少し”の上品 */
+}
 .block{
   grid-column: 3;
   max-width: 620px;
@@ -745,4 +747,10 @@
   }
 
   .scrollLine{ animation: none; }
+}
+/* 文章（block）だけ、ほんの少し右へ */
+@media (min-width: 768px){
+  .block{
+    margin-left: clamp(10px, 1.0vw, 18px);
+  }
 }

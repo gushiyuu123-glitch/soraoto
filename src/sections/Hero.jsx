@@ -19,9 +19,10 @@ const NAV_ITEMS = [
   { href: "#reserve", label: "RESERVE" },
 ];
 
-export default function Hero({ clock }) {
+export default function Hero({ clock, heroOn }) {
   const heroRef = useRef(null);
   const [navOn, setNavOn] = useState(true);
+
 
   const heroImage = "/images/soraoto-hero.png";
   const { r, g, b, op } = useMemo(() => getSkyPalette(clock), [clock]);
@@ -49,9 +50,9 @@ export default function Hero({ clock }) {
   }, []);
 
   return (
-    <section ref={heroRef} className={styles.hero} id="top">
+    <section className={styles.hero} id="top">
       <nav
-        className={`${styles.heroNav} ${navOn ? "" : styles.heroNavHidden}`}
+        className={`${styles.heroNav} ${heroOn ? "" : styles.heroNavHidden}`}
         aria-label="Primary"
       >
         <div className={styles.heroNavRail} aria-hidden="true" />

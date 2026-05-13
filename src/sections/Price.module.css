@@ -94,16 +94,16 @@
   inset: -18px -18px -18px -18px;
   z-index: -2;
   pointer-events: none;
-  background:
+ background:
     radial-gradient(
       ellipse 68% 70% at 18% 14%,
-      rgba(255,255,255,0.64) 0%,
-      rgba(255,255,255,0.28) 30%,
-      rgba(255,255,255,0.10) 48%,
+      rgba(var(--paper), 0.78) 0%,
+      rgba(var(--paper), 0.34) 30%,
+      rgba(var(--paper), 0.12) 48%,
       transparent 68%
     );
-  filter: blur(0.18px);
-  opacity: 0.95;
+  filter: blur(0.12px);
+  opacity: 0.88;
 }
 
 .score{
@@ -513,4 +513,27 @@
 /* 少しだけ空気に沈める */
 .grassAccent::selection{
   background: transparent;
+}
+/* railに拍（ドット）を刻む：Price専用の音楽感 */
+.rail{
+  position: relative;
+}
+
+.rail::after{
+  content:"";
+  position:absolute;
+  left: -4px;
+  top: 0;
+  width: 9px;
+  height: 100%;
+  pointer-events:none;
+
+  /* 1列のドット＝拍 */
+  background:
+    radial-gradient(circle, rgba(var(--ink), 0.12) 0 1.2px, transparent 1.4px);
+  background-size: 9px 26px;     /* ←拍の間隔 */
+  background-position: center 6px;
+
+  opacity: 0.55;
+  filter: blur(0.04px);
 }
